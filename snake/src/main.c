@@ -14,7 +14,7 @@ int main(void) {
 
 	request_refresh_rate(70);
 
-	BITMAP *bmp = create_bitmap(300, 300);
+	BITMAP *bmp = create_bitmap(640, 480);
 	clear_bitmap(bmp);
 
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
@@ -23,10 +23,7 @@ int main(void) {
 	line(screen, 10, 10, 630, 10, palette_color[15]);
 	line(screen, 10, 470, 10, 10, palette_color[15]);
 	line(screen, 630, 470, 630, 10, palette_color[15]);
-	line(screen, 0, 0, 0, 0, palette_color[15]);
-
-
-
+	line(screen, 630, 470, 10, 470, palette_color[15]);
 
 	while(!key[KEY_ESC]) {
 
