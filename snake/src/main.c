@@ -20,9 +20,10 @@ int main(void) {
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
 
 
-	int array[8] = {10, 100, 10,10,  20, 100, 20, 20};
-	//line(screen, 10, 10, 0, 10000, palette_color[15]);
-	polygon(screen, 4, array, palette_color[15]);
+	line(screen, 10, 10, 630, 10, palette_color[15]);
+	line(screen, 10, 470, 10, 10, palette_color[15]);
+	line(screen, 10, 470, 10, 10, palette_color[15]);
+
 
 
 
