@@ -19,18 +19,17 @@ int main(void) {
 
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
 
-	int x = 150;
-	int y = 150;
+
+	int array[8] = {10, 100, 10,10,  20, 100, 20, 20};
+	//line(screen, 10, 10, 0, 10000, palette_color[15]);
+	polygon(screen, 4, array, palette_color[15]);
+
+
+
 	while(!key[KEY_ESC]) {
 
-		if(getpixel(bmp, x, y)) continue;
-
-		putpixel(bmp, x , y, 16);
-		blit(bmp, screen, 0,0,0,0, 300, 300);
-		x = key[KEY_ESC];
 
 	}
-	printf("Hola");
 
 
 	remove_keyboard();
