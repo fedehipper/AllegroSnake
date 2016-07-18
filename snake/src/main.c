@@ -22,7 +22,8 @@ int main(void) {
 
 	line(screen, 10, 10, 630, 10, palette_color[15]);
 	line(screen, 10, 470, 10, 10, palette_color[15]);
-	line(screen, 10, 470, 10, 10, palette_color[15]);
+	line(screen, 630, 470, 630, 10, palette_color[15]);
+	line(screen, 0, 0, 0, 0, palette_color[15]);
 
 
 
