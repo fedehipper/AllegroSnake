@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <allegro.h>
 
-/* Posiciones X e Y iniciales */
-#define POS_X_INI 16
-#define POS_Y_INI 10
+#define POS_X_INI 32
+#define POS_Y_INI 20
 
 #define INC_X_INI 1
 #define INC_Y_INI 0
@@ -12,7 +11,6 @@
 /* Pausa en milisegundos entre un "fotograma" y otro */
 #define PAUSA 350
 
-/* Teclas predefinidas */
 #define ARRIBA KEY_W
 #define ABAJO KEY_S
 #define IZQUIERDA KEY_A
