@@ -40,7 +40,48 @@ int tecla;
 #define MAXFILAS 40
 #define MAXCOLS  64
 
-char mapa[MAXFILAS][MAXCOLS]={};
+char mapa[MAXFILAS][MAXCOLS]={
+  "                                                                ",
+  " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " X                                                            X ",
+  " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ",
+  "                                                                "
+};
 
 int numFrutas = 7;
 
