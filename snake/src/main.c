@@ -8,7 +8,7 @@
 #define INC_X_INI 1
 #define INC_Y_INI 0
 
-#define PAUSA 350
+#define PAUSA 100
 
 #define ARRIBA KEY_W
 #define ABAJO KEY_S
@@ -26,6 +26,7 @@ int tecla;
 
 #define MAXFILAS 40
 #define MAXCOLS 64
+
 
 char mapa[MAXFILAS][MAXCOLS] = {
   "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
@@ -70,6 +71,10 @@ char mapa[MAXFILAS][MAXCOLS] = {
   "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 };
 
+
+
+
+
 int numFrutas = 7;
 
 BITMAP *ladrilloFondo, *comida, *jugador;
@@ -109,6 +114,7 @@ int main(void) {
 
   set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
   crearSnake();
+
   dibujarMapa();
 
   posX = POS_X_INI;
@@ -145,7 +151,7 @@ int main(void) {
 
     rest (PAUSA);
   }
-  while (TRUE);
+  while (TRUE && tecla != KEY_ESC);
 
   readkey();
   return EXIT_SUCCESS;
