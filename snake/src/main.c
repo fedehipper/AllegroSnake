@@ -8,7 +8,6 @@
 #define INC_X_INI 1
 #define INC_Y_INI 0
 
-/* Pausa en milisegundos entre un "fotograma" y otro */
 #define PAUSA 350
 
 #define ARRIBA KEY_W
@@ -16,13 +15,8 @@
 #define IZQUIERDA KEY_A
 #define DERECHA KEY_D
 
-int posX, posY;  /* Posicion actual */
-int incX, incY;  /* Incremento de la posicion */
-
-/* Terminado: Si ha chocado o comida todas las frutas */
-int terminado;
-
-/* La tecla pulsada */
+int posX, posY;
+int incX, incY;
 int tecla;
 
 #define ESCALA 10
@@ -82,7 +76,7 @@ BITMAP *ladrilloFondo, *comida, *jugador;
 
 typedef int tipoSnake[ANCHOTROZO][ALTOTROZO];
 
-tipoSnake spriteJugador =
+tipoSnake vivora =
    {{0,15,15,15,15,15,15,15,0},
     {15,15,0,0,0,0,0,15,15},
 	{15,0,0,0,0,0,0,0,15},
@@ -99,7 +93,7 @@ void crearSnake() {
   clear_bitmap(jugador);
   for(i = 0; i < ANCHOTROZO; i++)
     for (j = 0; j < ALTOTROZO; j++)
-      putpixel(jugador, i, j, palette_color[spriteJugador[j][i]]);
+      putpixel(jugador, i, j, palette_color[vivora[j][i]]);
 }
 
 
@@ -125,28 +119,24 @@ int main(void) {
 
   do {
     dibujarMapa();
-    draw_sprite (screen, jugador, posX * ESCALA, posY * ESCALA);
-
-    terminado = FALSE;
+    draw_sprite(screen, jugador, posX * ESCALA, posY * ESCALA);
 
     if (mapa[posY][posX] == 'X') {
     	allegro_message("Game Over");
-    	terminado = TRUE;
+    	break;
     }
-
-    if (terminado) break;
 
     if (keypressed()) {
         tecla = readkey() >> 8;
         switch (tecla) {
           case ARRIBA:
-            incX = 0; incY = -1;  break;
+        	  incX = 0; incY = -1;  break;
           case ABAJO:
-            incX = 0; incY = 1;  break;
+        	  incX = 0; incY = 1;  break;
           case IZQUIERDA:
-            incX = -1; incY = 0;  break;
+        	  incX = -1; incY = 0;  break;
           case DERECHA:
-            incX = 1; incY = 0;  break;
+        	  incX = 1; incY = 0;  break;
         }
     }
 
