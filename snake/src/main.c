@@ -2,40 +2,40 @@
 #include <stdlib.h>
 #include <allegro.h>
 
-  /* Posiciones X e Y iniciales */
+/* Posiciones X e Y iniciales */
 #define POS_X_INI 16
 #define POS_Y_INI 10
 
-#define INC_X_INI  1
-#define INC_Y_INI  0
+#define INC_X_INI 1
+#define INC_Y_INI 0
 
-  /* Pausa en milisegundos entre un "fotograma" y otro */
+/* Pausa en milisegundos entre un "fotograma" y otro */
 #define PAUSA 350
 
-  /* Teclas predefinidas */
-#define TEC_ARRIBA KEY_W
-#define TEC_ABAJO  KEY_S
-#define TEC_IZQDA  KEY_A
-#define TEC_DCHA   KEY_D
+/* Teclas predefinidas */
+#define ARRIBA KEY_W
+#define ABAJO KEY_S
+#define IZQUIERDA KEY_A
+#define DERECHA KEY_D
 
 int posX, posY;  /* Posicion actual */
 int incX, incY;  /* Incremento de la posicion */
 
-  /* Terminado: Si ha chocado o comida todas las frutas */
+/* Terminado: Si ha chocado o comida todas las frutas */
 int terminado;
 
-  /* La tecla pulsada */
+/* La tecla pulsada */
 int tecla;
 
 #define ESCALA 10
 
 #define ANCHOTROZO 10
-#define ALTOTROZO  10
+#define ALTOTROZO 10
 
 #define MAXFILAS 40
-#define MAXCOLS  64
+#define MAXCOLS 64
 
-char mapa[MAXFILAS][MAXCOLS]={
+char mapa[MAXFILAS][MAXCOLS] = {
   "                                                                ",
   " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ",
   " X                                                            X ",
@@ -82,10 +82,9 @@ int numFrutas = 7;
 
 BITMAP *ladrilloFondo, *comida, *jugador;
 
-typedef int tipoSprite[ANCHOTROZO][ALTOTROZO];
+typedef int tipoSnake[ANCHOTROZO][ALTOTROZO];
 
-// trozos de la vivora
-tipoSprite spriteJugador =
+tipoSnake spriteJugador =
    {{0,15,15,15,15,15,15,15,0},
     {15,0,0,0,0,0,0,0,15},
 	{15,0,0,0,0,0,0,0,15},
@@ -93,10 +92,7 @@ tipoSprite spriteJugador =
     {15,0,0,0,0,0,0,0,15},
     {15,0,0,0,0,0,0,0,15},
     {15,0,0,0,0,0,0,0,15},
-    {0,15,15,15,15,15,15,15,0}
-   };
-
-
+    {0,15,15,15,15,15,15,15,0}};
 
 void crearSnake() {
   int i, j;
@@ -141,17 +137,17 @@ int main(void) {
 
     if (terminado) break;
 
-    if ( keypressed() ) {
+    if (keypressed()) {
         tecla = readkey() >> 8;
         switch (tecla) {
-          case TEC_ARRIBA:
-            incX =  0; incY = -1;  break;
-          case TEC_ABAJO:
-            incX =  0; incY =  1;  break;
-          case TEC_IZQDA:
-            incX = -1; incY =  0;  break;
-          case TEC_DCHA:
-            incX =  1; incY =  0;  break;
+          case ARRIBA:
+            incX = 0; incY = -1;  break;
+          case ABAJO:
+            incX = 0; incY = 1;  break;
+          case IZQUIERDA:
+            incX = -1; incY = 0;  break;
+          case DERECHA:
+            incX = 1; incY = 0;  break;
         }
     }
 
@@ -165,4 +161,5 @@ int main(void) {
   readkey();
   return EXIT_SUCCESS;
 }
+
 END_OF_MAIN();
