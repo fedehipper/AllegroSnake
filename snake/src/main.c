@@ -166,7 +166,8 @@ void creaSprites() {
 
 void dibujaFondo() {
 
-	rect(screen, 10, 10, 630, 470, palette_color[15]);
+	clear_bitmap(screen);
+	rect(screen, 10, 10, 630, 390, palette_color[15]);
 //  int i, j;
 //  clear_bitmap(screen);
 //    for(i=0; i<MAXCOLS; i++)
