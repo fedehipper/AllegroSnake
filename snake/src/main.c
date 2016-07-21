@@ -64,34 +64,29 @@ tipoSprite spriteJugador =
 
 
 
-void creaSprites() {
+void crearSnake() {
   int i, j;
-
   jugador = create_bitmap(10, 10);
   clear_bitmap(jugador);
   for(i=0; i<ANCHOSPRITE; i++)
     for (j=0; j<ALTOSPRITE; j++)
       putpixel(jugador, i, j, palette_color[spriteJugador[j][i]]);
-
 }
 
 
-void dibujaFondo() {
+void dibujarMapa() {
 	clear_bitmap(screen);
 	rect(screen, 10, 10, 630, 390, palette_color[15]);
 }
 
 int main(void) {
-
-
-
   allegro_init();
   install_keyboard();
   install_timer();
 
   set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
-  creaSprites();
-  dibujaFondo();
+  crearSnake();
+  dibujarMapa();
 
   posX = POS_X_INI;
   posY = POS_Y_INI;
@@ -100,15 +95,16 @@ int main(void) {
   incY = INC_Y_INI;
 
   do {
-    dibujaFondo();
+    dibujarMapa();
     draw_sprite (screen, jugador, posX * ESCALA, posY * ESCALA);
 
     terminado = FALSE;
 
     if (mapa[posY][posX] == 'X') {
     	allegro_message("Game Over");
-      terminado = TRUE;
+    	terminado = TRUE;
     }
+
     if (terminado) break;
 
     if ( keypressed() ) {
