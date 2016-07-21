@@ -97,8 +97,8 @@ void crearSnake() {
   int i, j;
   jugador = create_bitmap(10, 10);
   clear_bitmap(jugador);
-  for(i=0; i<ANCHOTROZO; i++)
-    for (j=0; j<ALTOTROZO; j++)
+  for(i = 0; i < ANCHOTROZO; i++)
+    for (j = 0; j < ALTOTROZO; j++)
       putpixel(jugador, i, j, palette_color[spriteJugador[j][i]]);
 }
 
