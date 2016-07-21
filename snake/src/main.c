@@ -29,8 +29,8 @@ int tecla;
 
 #define ESCALA 10
 
-#define ANCHOSPRITE 10
-#define ALTOSPRITE  10
+#define ANCHOTROZO 10
+#define ALTOTROZO  10
 
 #define MAXFILAS 40
 #define MAXCOLS  64
@@ -82,7 +82,7 @@ int numFrutas = 7;
 
 BITMAP *ladrilloFondo, *comida, *jugador;
 
-typedef int tipoSprite[ANCHOSPRITE][ALTOSPRITE];
+typedef int tipoSprite[ANCHOTROZO][ALTOTROZO];
 
 // trozos de la vivora
 tipoSprite spriteJugador =
@@ -102,8 +102,8 @@ void crearSnake() {
   int i, j;
   jugador = create_bitmap(10, 10);
   clear_bitmap(jugador);
-  for(i=0; i<ANCHOSPRITE; i++)
-    for (j=0; j<ALTOSPRITE; j++)
+  for(i=0; i<ANCHOTROZO; i++)
+    for (j=0; j<ALTOTROZO; j++)
       putpixel(jugador, i, j, palette_color[spriteJugador[j][i]]);
 }
 
