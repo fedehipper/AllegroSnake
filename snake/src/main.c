@@ -41,48 +41,6 @@ int tecla;
 #define MAXCOLS  64
 
 char mapa[MAXFILAS][MAXCOLS]={};
-//char mapa[MAXFILAS][MAXCOLS]={
-//  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "X                                                              X",
-//  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-//};
 
 int numFrutas = 7;
 
@@ -92,31 +50,6 @@ BITMAP *ladrilloFondo, *comida, *jugador;
 
 typedef int tipoSprite[ANCHOSPRITE][ALTOSPRITE];
                          /* El sprite en si: matriz de 30x30 bytes */
-
-tipoSprite techo =
-   {{0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-    {15,15,15,15,15,15,15,15,15,15},
-	{15,15,15,15,15,15,15,15,15,15},
-	{0,0,0,0,0,0,0,0,0,0}
-   };
-
-tipoSprite piso =
-   {{0,0,0,0,0,0,0,0,0,0},
-	{15,15,15,15,15,15,15,15,15,15},
-    {15,15,15,15,15,15,15,15,15,15},
-    {0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0}
-   };
-
 
 tipoSprite spriteJugador =
    {{0,15,15,15,15,15,15,15,0},
@@ -134,27 +67,6 @@ tipoSprite spriteJugador =
 void creaSprites() {
   int i, j;
 
-  ladrilloFondo = create_bitmap(10, 10);
-  clear_bitmap(ladrilloFondo);
-  for(i = 0; i < 10; i++)
-	  for(j = 0; j < 10; j++)
-	  putpixel(ladrilloFondo, i, j, palette_color[techo[j][i]]);
-  for(i = 0; i < 10; i++)
-	  for(j = 0; j < 10; j++)
-	  putpixel(ladrilloFondo, i, j, palette_color[piso[j][i]]);
-
-
-
-
-
-//  for(i = 0; i < ANCHOSPRITE; i++) {
-//    for (j = 0; j < ALTOSPRITE; j++) {
-//      if(i == 0) putpixel(ladrilloFondo, i, j, palette_color[techo[j][i]]);
-//      else if(i == 9) putpixel(ladrilloFondo, i, j, palette_color[piso[j][i]]);
-//    }
-//  }
-
-
   jugador = create_bitmap(10, 10);
   clear_bitmap(jugador);
   for(i=0; i<ANCHOSPRITE; i++)
@@ -165,16 +77,8 @@ void creaSprites() {
 
 
 void dibujaFondo() {
-
 	clear_bitmap(screen);
 	rect(screen, 10, 10, 630, 390, palette_color[15]);
-//  int i, j;
-//  clear_bitmap(screen);
-//    for(i=0; i<MAXCOLS; i++)
-//    for (j=0; j<MAXFILAS; j++) {
-//      if (mapa[j][i] == 'X')
-//        draw_sprite(screen, ladrilloFondo, i*ESCALA, j*ESCALA);
-//    }
 }
 
 int main(void) {
