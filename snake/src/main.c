@@ -27,16 +27,11 @@ int terminado;
   /* La tecla pulsada */
 int tecla;
 
-  /* Escala: relacion entre tama�o de mapa y de pantalla */
 #define ESCALA 10
 
-  /* Ancho y alto de los sprites */
 #define ANCHOSPRITE 10
 #define ALTOSPRITE  10
 
-  /* Y el mapa que representa a la pantalla */
-  /* Como usaremos modo grafico de 320x200 puntos */
-  /* y una escala de 10, el tablero medira 32x20 */
 #define MAXFILAS 40
 #define MAXCOLS  64
 
@@ -85,13 +80,11 @@ char mapa[MAXFILAS][MAXCOLS]={
 
 int numFrutas = 7;
 
-  /* Nuestros sprites */
 BITMAP *ladrilloFondo, *comida, *jugador;
 
-
 typedef int tipoSprite[ANCHOSPRITE][ALTOSPRITE];
-                         /* El sprite en si: matriz de 30x30 bytes */
 
+// trozos de la vivora
 tipoSprite spriteJugador =
    {{0,15,15,15,15,15,15,15,0},
     {15,0,0,0,0,0,0,0,15},
