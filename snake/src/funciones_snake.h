@@ -4,8 +4,8 @@
 
 
 
-#define V 40
-#define H 64
+#define V 39
+#define H 63
 #define N 100
 
 void inicio(int *tam, char campo[V][H]);

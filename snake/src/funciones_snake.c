@@ -7,8 +7,8 @@
 #include <time.h>
 #include "bits.h"
 
-#define V 40
-#define H 64
+#define V 39
+#define H 63
 #define N 2560
 
 #define PAUSA 150
