@@ -137,7 +137,7 @@ int main(void) {
 	int tam;
 	char campo[V][H];
 
-	inicio(&tam, campo);// iniciar todos nuestros elementos
+	inicio(&tam, campo);// iniciar todos los elementos
 	loop(campo, tam);
 
 	return 0;
@@ -169,7 +169,7 @@ void intro_campo(char campo[V][H]) {
 			campo[i][j] = ' ';
 }
 
-// mete todos los datos en la metriz campo
+// mete todos los datos en la matriz campo
 void intro_datos(char campo[V][H], int tam) {
 	int i;
 	for(i = 1 ; i < tam ; i++) {
@@ -193,7 +193,7 @@ void inicio(int *tam, char campo[V][H]) {
 	crear_comida();
 	crear_cabeza();
 
-	// la cabeza de nuestra serpiente
+	// la cabeza de la serpiente
 	int i;
 	snake[0].x = 32;
 	snake[0].y = 10;
@@ -271,7 +271,7 @@ void input(char campo[V][H], int *tam, int *muerto) {
 	if(*muerto == 0) {
 		if(kbhit() == 1) {
 			key = getchar();
-			// abajo
+
 			if(key == 's' && snake[0].ModY != -1) {
 				snake[0].ModX = 0;
 				snake[0].ModY = 1;
@@ -294,7 +294,7 @@ void input(char campo[V][H], int *tam, int *muerto) {
 }
 
 void update(char campo[V][H], int tam) {
-// borrar todos los datos de la matriz
+	// borrar todos los datos de la matriz
 	intro_campo(campo);
 
 	// introducir los nuevos datos
