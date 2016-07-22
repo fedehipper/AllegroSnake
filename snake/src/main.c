@@ -211,8 +211,6 @@ tipoSnake fruta_bits =
     {0,0,0,0,15,15,15,15,0}};
 
 
-
-
 void crear_snake() {
 	int i, j;
 	jugador = create_bitmap(10, 10);
@@ -246,7 +244,6 @@ void dibujar_bordes() {
 
 
 int main(void) {
-
 	allegro_init();
 	set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
 
@@ -266,7 +263,7 @@ END_OF_MAIN();
 
 void draw(char campo[V][H]) {
 	int i,j;
-
+	dibujar_bordes();
 	for(i = 0 ; i < V; i++) {
 		for(j = 0; j < H ; j++) {
 			if(campo[i][j] != ' ' && campo[i][j] != '%' && campo[i][j] != 'O')
@@ -282,7 +279,6 @@ void draw(char campo[V][H]) {
 
 
 void intro_campo(char campo[V][H]) {
-	dibujar_bordes();
 	int i, j;
 	for(i = 0; i < V; i++)
 		for(j = 0; j < H; j++)
@@ -368,14 +364,12 @@ void input(char campo[V][H], int *tam, int *muerto) {
 		// regenerar la fruta y agrandar la serpiente
 		snake[*tam - 1].imagen = 'X';
 
-
 		fruta.x = rand() % (H - 1);
 		fruta.y = rand() % (V - 1);
 
 		while(fruta.x == 0) {
 			fruta.x = rand() % (H - 1);
 		}
-
 		while(fruta.y == 0) {
 			fruta.y = rand() % (V - 1);
 		}
@@ -413,7 +407,6 @@ void update(char campo[V][H], int tam) {
 	intro_campo(campo);
 
 	// introducir los nuevos datos
-
 	intro_datos2(campo, tam);
 }
 
@@ -424,16 +417,10 @@ void intro_datos2(char campo[V][H], int tam) {
 		snake[i].x = snake[i-1].x;
 		snake[i].y = snake[i-1].y;
 	}
-
 	snake[0].x += snake[0].ModX;
 	snake[0].y += snake[0].ModY;
-
 	for(i = 0 ; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
 	}
-
-	// ahora con la fruta
 	campo[fruta.y][fruta.x] = '%';
-
-
 }
