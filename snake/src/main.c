@@ -173,11 +173,22 @@ void update(char campo[V][H], int tam);
 void intro_datos2(char campo[V][H], int tam);
 
 
-BITMAP *ladrilloFondo, *comida, *jugador;
+BITMAP *ladrilloFondo, *comida, *jugador, *cabeza;
 
 typedef int tipoSnake[10][10];
 
 tipoSnake vivora =
+   {{15,15,15,15,0,0,0,0,0},
+    {15,15,15,15,0,0,0,0,0},
+	{15,15,15,15,0,0,0,0,0},
+	{15,15,15,15,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,15,15,15,15},
+	{0,0,0,0,0,15,15,15,15},
+    {0,0,0,0,0,15,15,15,15},
+    {0,0,0,0,0,15,15,15,15}};
+
+tipoSnake cabeza_bits =
    {{0,15,15,15,15,15,15,15,0},
     {15,15,0,0,0,0,0,15,15},
 	{15,0,0,0,0,0,0,0,15},
@@ -211,6 +222,15 @@ void crear_snake() {
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
 }
 
+void crear_cabeza() {
+	int i, j;
+	cabeza = create_bitmap(10, 10);
+	clear_bitmap(cabeza);
+	for(i = 0; i < 10; i++)
+		for (j = 0; j < 10; j++)
+			putpixel(cabeza, i, j, palette_color[cabeza_bits[j][i]]);
+}
+
 void crear_comida() {
 	int i, j;
 	comida = create_bitmap(10, 10);
@@ -232,6 +252,7 @@ int main(void) {
 
 	crear_snake();
 	crear_comida();
+	crear_cabeza();
 
 	int tam;
 	char campo[V][H];
@@ -248,10 +269,12 @@ void draw(char campo[V][H]) {
 
 	for(i = 0 ; i < V; i++) {
 		for(j = 0; j < H ; j++) {
-			if(campo[i][j] != ' ' && campo[i][j] != '%')
+			if(campo[i][j] != ' ' && campo[i][j] != '%' && campo[i][j] != 'O')
 				draw_sprite(screen, jugador, j * 10, i * 10);
 			if(campo[i][j] == '%')
 				draw_sprite(screen, comida, j * 10, i * 10);
+			if(campo[i][j] == 'O')
+				draw_sprite(screen, cabeza, j * 10, i * 10);
 		}
 	}
 
@@ -274,7 +297,7 @@ void intro_datos(char campo[V][H], int tam) {
 		snake[i].y = snake[i - 1].y;
 		snake[i].imagen ='X';
 	}
-	snake[0].imagen = 'X';
+	snake[0].imagen = 'O';
 
 	for(i = 0; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
