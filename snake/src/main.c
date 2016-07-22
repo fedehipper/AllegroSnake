@@ -244,13 +244,6 @@ void dibujar_bordes() {
 
 
 int main(void) {
-	allegro_init();
-	set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
-
-	crear_snake();
-	crear_comida();
-	crear_cabeza();
-
 	int tam;
 	char campo[V][H];
 
@@ -263,6 +256,7 @@ END_OF_MAIN();
 
 void draw(char campo[V][H]) {
 	int i,j;
+	clear_bitmap(screen);
 	dibujar_bordes();
 	for(i = 0 ; i < V; i++) {
 		for(j = 0; j < H ; j++) {
@@ -283,6 +277,7 @@ void intro_campo(char campo[V][H]) {
 	for(i = 0; i < V; i++)
 		for(j = 0; j < H; j++)
 			campo[i][j] = ' ';
+	//clear_bitmap(screen);
 }
 
 // mete todos los datos en la metriz campo
@@ -292,16 +287,27 @@ void intro_datos(char campo[V][H], int tam) {
 		snake[i].x = snake[i - 1].x - 1;
 		snake[i].y = snake[i - 1].y;
 		snake[i].imagen ='X';
+		//draw_sprite(screen, jugador, snake[i].x * 10, snake[i].y * 10);
 	}
 	snake[0].imagen = 'O';
+	//draw_sprite(screen, cabeza, snake[0].x * 10, snake[0].y * 10);
 
 	for(i = 0; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
+		//draw_sprite(screen, comida, snake[i].x * 10, snake[i].y * 10);
 	}
 	campo[fruta.y][fruta.x] = '%';
 }
 
 void inicio(int *tam, char campo[V][H]) {
+	allegro_init();
+	set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
+
+	crear_snake();
+	crear_comida();
+	crear_cabeza();
+
+
 	// la cabeza de nuestra serpiente
 	int i;
 	snake[0].x = 32;

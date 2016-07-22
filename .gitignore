@@ -3,6 +3,12 @@
 *.ko
 *.obj
 *.elf
+/.settings/
+*.settings/
+*.settings
+
+language.settings.xml
+*.xml
 
 /Debug/
 
