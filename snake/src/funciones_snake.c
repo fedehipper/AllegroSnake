@@ -9,7 +9,10 @@
 
 #define V 40
 #define H 64
-#define N 100
+#define N 2560
+
+#define PAUSA 150
+#define ESCALA 10
 
 typedef struct {
 	int x,y;
@@ -59,29 +62,6 @@ void dibujar_bordes() {
 	rect(screen, 10, 10, 630, 390, palette_color[15]);
 }
 
-int kbhit(void) {
-	struct termios oldt, newt;
-	int ch;
-	int oldf;
-	tcgetattr(STDIN_FILENO, &oldt);
-	newt = oldt;
-	newt.c_lflag &= ~(ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-	fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-	ch = getchar();
-
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-	fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-	if(ch != EOF) {
-		ungetc(ch, stdin);
-		return 1;
-	}
-	return 0;
-}
-
 void draw(char campo[V][H]) {
 	int i,j;
 	clear_bitmap(screen);
@@ -123,6 +103,8 @@ void intro_datos(char campo[V][H], int tam) {
 
 void inicio(int *tam, char campo[V][H]) {
 	allegro_init();
+	install_keyboard();
+	install_timer();
 	set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
 
 	crear_snake();
@@ -211,40 +193,44 @@ void input(char campo[V][H], int *tam, int *muerto) {
 			fruta.y = rand() % (V - 1);
 		}
 	}
-
-	// comprobar la tecla que se pulsa
-	char key;
-	if(*muerto == 0) {
-		if(kbhit() == 1) {
-			key = getchar();
-
-			if(key == 's' && snake[0].ModY != -1) {
-				snake[0].ModX = 0;
-				snake[0].ModY = 1;
-		   }
-			if(key == 'w'  && snake[0].ModY != 1) {
-				snake[0].ModX = 0;
-				snake[0].ModY = -1;
-			}
-			if(key == 'a'  && snake[0].ModX != 1) {
-				snake[0].ModX = -1;
-				snake[0].ModY = 0;
-			}
-			if(key == 'd'  && snake[0].ModX != -1) {
-				snake[0].ModX = 1;
-				snake[0].ModY = 0;
-			}
-		}
-	}
 }
 
 void loop(char campo[V][H], int tam) {
 	int muerto = 0;
+	int tecla = 0;
 	do {
 		draw(campo);
 		input(campo, &tam, &muerto);
+		// comprobar la tecla que se pulsa
+
+		if(muerto == 0) {
+			if(keypressed()) {
+				tecla = readkey() >> 8;
+
+				if(tecla == KEY_S && snake[0].ModY != -1) {
+					snake[0].ModX = 0;
+					snake[0].ModY = 1;
+			    }
+				if(tecla == KEY_W  && snake[0].ModY != 1) {
+					snake[0].ModX = 0;
+					snake[0].ModY = -1;
+				}
+				if(tecla == KEY_A  && snake[0].ModX != 1) {
+					snake[0].ModX = -1;
+					snake[0].ModY = 0;
+				}
+				if(tecla == KEY_D  && snake[0].ModX != -1) {
+					snake[0].ModX = 1;
+					snake[0].ModY = 0;
+				}
+			}
+		}
+		else {
+			allegro_message("GAME OVER");
+		}
+
 		update(campo, tam);
 
-		sleep(1);
-	} while (muerto == 0);
+		rest(PAUSA);
+	} while (muerto == 0 && tecla != KEY_ESC);
 }
