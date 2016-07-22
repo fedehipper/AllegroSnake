@@ -7,8 +7,8 @@
 #include <time.h>
 #include "bits.h"
 
-#define V 39
-#define H 63
+#define V 40
+#define H 64
 #define N 2560
 
 #define PAUSA 150
@@ -29,7 +29,7 @@ snk snake[N];
 
 frt fruta;
 
-BITMAP *ladrilloFondo, *comida, *jugador, *cabeza;
+BITMAP *comida, *jugador, *cabeza;
 
 void crear_snake() {
 	int i, j;

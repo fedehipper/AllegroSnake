@@ -6,7 +6,7 @@
 int main(void) {
 
 	int tam = 0;
-	char campo[39][63];
+	char campo[40][64];
 
 	inicio(&tam, campo);
 	loop(campo, tam);
