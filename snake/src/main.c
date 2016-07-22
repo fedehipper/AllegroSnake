@@ -188,6 +188,19 @@ tipoSnake vivora =
     {15,15,0,0,0,0,0,15,15},
     {0,15,15,15,15,15,15,15,0}};
 
+tipoSnake fruta_bits =
+   {{0,0,15,15,15,15,15,0,0},
+    {0,15,0,0,0,0,0,15,15},
+	{15,0,0,0,0,0,0,0,15},
+	{0,0,0,15,15,15,0,0,15},
+    {15,0,0,15,15,0,0,0,0},
+    {0,15,0,15,15,15,0,0,15},
+	{0,0,15,0,0,0,0,0,0},
+    {0,0,0,15,0,0,0,15,15},
+    {0,0,0,0,15,15,15,15,0}};
+
+
+
 
 void crear_snake() {
 	int i, j;
@@ -196,6 +209,15 @@ void crear_snake() {
 	for(i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
+}
+
+void crear_comida() {
+	int i, j;
+	comida = create_bitmap(10, 10);
+	clear_bitmap(comida);
+	for(i = 0; i < 10; i++)
+		for (j = 0; j < 10; j++)
+			putpixel(comida, i, j, palette_color[fruta_bits[j][i]]);
 }
 
 void dibujar_bordes() {
@@ -207,7 +229,9 @@ int main(void) {
 
 	allegro_init();
 	set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
+
 	crear_snake();
+	crear_comida();
 
 	int tam;
 	char campo[V][H];
@@ -224,8 +248,10 @@ void draw(char campo[V][H]) {
 
 	for(i = 0 ; i < V; i++) {
 		for(j = 0; j < H ; j++) {
-			if(campo[i][j] != ' ')
+			if(campo[i][j] != ' ' && campo[i][j] != '%')
 				draw_sprite(screen, jugador, j * 10, i * 10);
+			if(campo[i][j] == '%')
+				draw_sprite(screen, comida, j * 10, i * 10);
 		}
 	}
 
