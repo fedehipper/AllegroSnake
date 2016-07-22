@@ -9,8 +9,6 @@
 #define INC_Y_INI 0
 
 #define PAUSA 100
-int tecla;
-
 #define ESCALA 10
 
 #define ANCHO_TROZO 10
@@ -55,6 +53,7 @@ void dibujar_mapa() {
 }
 
 int main(void) {
+	int tecla;
 	int pos_x, pos_y;
 	int inc_x, inc_y;
 	allegro_init();
@@ -76,14 +75,14 @@ int main(void) {
 		dibujar_mapa();
 		draw_sprite(screen, jugador, pos_x * ESCALA, pos_y * ESCALA);
 
-		if (toca_pared(pos_x, pos_y)) {
+		if(toca_pared(pos_x, pos_y)) {
 			allegro_message("Game Over");
 			break;
 		}
 
-		if (keypressed()) {
+		if(keypressed()) {
 			tecla = readkey() >> 8;
-			switch (tecla) {
+			switch(tecla) {
 			  case KEY_W:
 				  inc_x = 0; inc_y = -1;  break;
 			  case KEY_S:
@@ -98,9 +97,9 @@ int main(void) {
 		pos_x += inc_x;
 		pos_y += inc_y;
 
-		rest (PAUSA);
+		rest(PAUSA);
 	  }
-	  while (TRUE && tecla != KEY_ESC);
+	  while(TRUE && tecla != KEY_ESC);
 
 	  readkey();
 	  return EXIT_SUCCESS;
