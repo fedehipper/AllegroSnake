@@ -15,6 +15,6 @@ void draw(char campo[V][H]);
 void loop(char campo[V][H], int tam);
 void input(char campo[V][H], int *tam, int *muerto);
 void update(char campo[V][H], int tam);
-void intro_datos2(char campo[V][H], int tam);
+void intro_datos_nuevos(char campo[V][H], int tam);
 
 #endif /* SRC_FUNCIONES_SNAKE_H_ */

@@ -94,13 +94,10 @@ void dibujar_bordes() {
 	rect(screen, 10, 10, 630, 390, palette_color[15]);
 }
 
-
-int kbhit(void)
-{
+int kbhit(void) {
   struct termios oldt, newt;
   int ch;
   int oldf;
-
   tcgetattr(STDIN_FILENO, &oldt);
   newt = oldt;
   newt.c_lflag &= ~(ICANON | ECHO);
@@ -113,15 +110,12 @@ int kbhit(void)
   tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
   fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-  if(ch != EOF)
-  {
+  if(ch != EOF) {
     ungetc(ch, stdin);
     return 1;
   }
-
   return 0;
 }
-
 
 void draw(char campo[V][H]) {
 	int i,j;
@@ -137,7 +131,6 @@ void draw(char campo[V][H]) {
 				draw_sprite(screen, cabeza, j * 10, i * 10);
 		}
 	}
-
 }
 
 void intro_campo(char campo[V][H]) {
@@ -176,7 +169,7 @@ void inicio(int *tam, char campo[V][H]) {
 	snake[0].x = 32;
 	snake[0].y = 10;
 
-	// tamanio de la serpiente
+	// tamanio de la serpiente inicial
 	*tam = 4;
 
 	// semilla de la aleatoriedad
@@ -202,8 +195,7 @@ void inicio(int *tam, char campo[V][H]) {
 	intro_datos(campo, *tam);
 }
 
-
-void intro_datos2(char campo[V][H], int tam) {
+void intro_datos_nuevos(char campo[V][H], int tam) {
 	// crear la persecucion de los elementos del cuerpo a si mismo
 	int i;
 	for(i = tam - 1; i > 0 ; i--) {
@@ -221,9 +213,8 @@ void intro_datos2(char campo[V][H], int tam) {
 void update(char campo[V][H], int tam) {
 	// borrar todos los datos de la matriz
 	intro_campo(campo);
-
 	// introducir los nuevos datos
-	intro_datos2(campo, tam);
+	intro_datos_nuevos(campo, tam);
 }
 
 void input(char campo[V][H], int *tam, int *muerto) {
@@ -278,11 +269,9 @@ void input(char campo[V][H], int *tam, int *muerto) {
 				snake[0].ModX = 1;
 				snake[0].ModY = 0;
 			}
-
 		}
 	}
 }
-
 
 void loop(char campo[V][H], int tam) {
 	int muerto = 0;
@@ -292,10 +281,5 @@ void loop(char campo[V][H], int tam) {
 		update(campo, tam);
 
 		sleep(1);
-	}while (muerto == 0);
+	} while (muerto == 0);
 }
-
-
-
-
-
