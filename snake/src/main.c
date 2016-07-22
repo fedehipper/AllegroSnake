@@ -215,15 +215,11 @@ int main(void) {
 	inicio(&tam, campo);// iniciar todos nuestros elementos
 	loop(campo, tam);
 
-
-
-
 	return 0;
 }
 END_OF_MAIN();
 
 void draw(char campo[V][H]) {
-	dibujar_bordes();
 	int i,j;
 
 	for(i = 0 ; i < V; i++) {
@@ -237,6 +233,7 @@ void draw(char campo[V][H]) {
 
 
 void intro_campo(char campo[V][H]) {
+	dibujar_bordes();
 	int i, j;
 	for(i = 0; i < V; i++)
 		for(j = 0; j < H; j++)
@@ -251,7 +248,7 @@ void intro_datos(char campo[V][H], int tam) {
 		snake[i].y = snake[i - 1].y;
 		snake[i].imagen ='X';
 	}
-	snake[0].imagen = 'O';
+	snake[0].imagen = 'X';
 
 	for(i = 0; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
@@ -295,7 +292,6 @@ void inicio(int *tam, char campo[V][H]) {
 void loop(char campo[V][H], int tam) {
 	int muerto = 0;
 	do {
-		system("clear");
 		draw(campo);
 		input(campo, &tam, &muerto);
 		update(campo, tam);
@@ -342,53 +338,34 @@ void input(char campo[V][H], int *tam, int *muerto) {
 		if(kbhit() == 1) {
 			key = getchar();
 			// abajo
-			if(key == '2' && snake[0].ModY != -1) {
+			if(key == 's' && snake[0].ModY != -1) {
 				snake[0].ModX = 0;
 				snake[0].ModY = 1;
 		   }
-			if(key == '8'  && snake[0].ModY != 1) {
+			if(key == 'w'  && snake[0].ModY != 1) {
 				snake[0].ModX = 0;
 				snake[0].ModY = -1;
 			}
-			if(key == '4'  && snake[0].ModX != 1) {
+			if(key == 'a'  && snake[0].ModX != 1) {
 				snake[0].ModX = -1;
 				snake[0].ModY = 0;
 			}
-			if(key == '6'  && snake[0].ModX != -1) {
+			if(key == 'd'  && snake[0].ModX != -1) {
 				snake[0].ModX = 1;
 				snake[0].ModY = 0;
 			}
 
 		}
-
-//		if(keypressed()) {
-//					key = readkey() >> 8;
-//					switch(key) {
-//					  case KEY_W:
-//						  snake[0].ModX = 0; snake[0].ModY = -1;  break;
-//					  case KEY_S:
-//						  snake[0].ModX = 0; snake[0].ModY = 1;  break;
-//					  case KEY_A:
-//						  snake[0].ModX = -1; snake[0].ModY = 0;  break;
-//					  case KEY_D:
-//						  snake[0].ModX = 1; snake[0].ModY = 0;  break;
-//					}
-//				}
-
 	}
-
-
 }
 
 void update(char campo[V][H], int tam) {
 // borrar todos los datos de la matriz
 	intro_campo(campo);
-	//clear_bitmap(screen);
+
 	// introducir los nuevos datos
 
 	intro_datos2(campo, tam);
-
-
 }
 
 void intro_datos2(char campo[V][H], int tam) {
@@ -409,33 +386,5 @@ void intro_datos2(char campo[V][H], int tam) {
 	// ahora con la fruta
 	campo[fruta.y][fruta.x] = '%';
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
