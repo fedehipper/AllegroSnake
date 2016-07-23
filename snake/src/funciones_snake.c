@@ -6,12 +6,12 @@
 #include <fcntl.h>
 #include <time.h>
 #include "bits.h"
+#include <math.h>
 
 #define V 40
 #define H 64
 #define N 2560
 
-#define PAUSA 100
 #define ESCALA 10
 
 typedef struct {
@@ -209,10 +209,19 @@ int input(char campo[V][H], int tam, int *muerto) {
 
 void loop(char campo[V][H], int tam) {
 	int muerto = 0;
+	frt fruta_anterior;
+	int pausa = 1000;
 	do {
 		draw(campo);
+		fruta_anterior = fruta;
 		tam = input(campo, tam, &muerto);
+
 		update(campo, tam, muerto);
-		rest(PAUSA);
+
+		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y)
+			pausa -= log(pausa);
+
+		rest(pausa);
+
 	} while (muerto == 0);
 }
