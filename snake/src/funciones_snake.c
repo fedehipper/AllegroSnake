@@ -142,12 +142,12 @@ void intro_datos_nuevos(char campo[V][H], int tam) {
 	campo[fruta.y][fruta.x] = '%';
 }
 
-void update(char campo[V][H], int tam) {
+void update(char campo[V][H], int tam, int muerto) {
 	intro_campo(campo);
-	intro_datos_nuevos(campo, tam);
+	if(muerto == 0) intro_datos_nuevos(campo, tam);
 }
 
-void input(char campo[V][H], int *tam, int *muerto) {
+int input(char campo[V][H], int tam, int *muerto) {
 	int tecla = 0;
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == H - 1 || snake[0].y == 0 || snake[0].y == V - 1) {
@@ -157,7 +157,7 @@ void input(char campo[V][H], int *tam, int *muerto) {
 
 	if(*muerto == 0) {
 		int i;
-		for(i = 1 ; i < *tam && *muerto == 0 ; i++) {
+		for(i = 1 ; i < tam && *muerto == 0 ; i++) {
 			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
 				*muerto = 1;
 			}
@@ -166,8 +166,8 @@ void input(char campo[V][H], int *tam, int *muerto) {
 
 	if(*muerto == 0) {
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
-			*tam += 1;
-			snake[*tam - 1].imagen = 'X';
+			tam += 1;
+			snake[tam - 1].imagen = 'X';
 
 			fruta.x = rand() % (H - 1);
 			fruta.y = rand() % (V - 1);
@@ -204,14 +204,15 @@ void input(char campo[V][H], int *tam, int *muerto) {
 		}
 	}
 	else allegro_message("GAME OVER");
+	return tam;
 }
 
 void loop(char campo[V][H], int tam) {
 	int muerto = 0;
 	do {
 		draw(campo);
-		input(campo, &tam, &muerto);
-		update(campo, tam);
+		tam = input(campo, tam, &muerto);
+		update(campo, tam, muerto);
 		rest(PAUSA);
 	} while (muerto == 0);
 }

@@ -9,7 +9,7 @@ void intro_datos(char campo[V][H], int tam);
 void intro_campo(char campo[V][H]);
 void draw(char campo[V][H]);
 void loop(char campo[V][H], int tam);
-void input(char campo[V][H], int *tam, int *muerto);
+int input(char campo[V][H], int tam, int *muerto);
 void update(char campo[V][H], int tam);
 void intro_datos_nuevos(char campo[V][H], int tam);
 
