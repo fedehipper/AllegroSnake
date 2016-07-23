@@ -5,7 +5,7 @@
 
 int main(void) {
 
-	int tam = 0;
+	int tam;
 	char campo[40][64];
 
 	inicio(&tam, campo);

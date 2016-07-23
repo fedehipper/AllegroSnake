@@ -153,6 +153,7 @@ void update(char campo[V][H], int tam) {
 
 void input(char campo[V][H], int *tam, int *muerto) {
 	// comprobar si se muere la snake
+	int tecla = 0;
 	if(snake[0].x == 0 || snake[0].x == H - 1 || snake[0].y == 0 || snake[0].y == V - 1) {
 		*muerto = 1;
 	}
@@ -180,7 +181,7 @@ void input(char campo[V][H], int *tam, int *muerto) {
 		}
 	}
 
-	int tecla = 0;
+
 	if(*muerto == 0) {
 		if(keypressed()) {
 			tecla = readkey() >> 8;
