@@ -11,7 +11,6 @@ int main(void) {
 	inicio(&tam, campo);
 	loop(campo, tam);
 
-
 	allegro_exit();
 	return EXIT_SUCCESS;
 }

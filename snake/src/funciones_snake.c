@@ -11,7 +11,7 @@
 #define H 64
 #define N 2560
 
-#define PAUSA 150
+#define PAUSA 120
 #define ESCALA 10
 
 typedef struct {
@@ -98,11 +98,9 @@ void inicio(int *tam, char campo[V][H]) {
 	crear_snake();
 	crear_comida();
 
-	// la cabeza de la serpiente
 	snake[0].x = 32;
 	snake[0].y = 10;
 
-	// tamanio de la serpiente inicial
 	*tam = 4;
 
 	// semilla de la aleatoriedad
@@ -132,7 +130,7 @@ void inicio(int *tam, char campo[V][H]) {
 void intro_datos_nuevos(char campo[V][H], int tam) {
 	// crear la persecucion de los elementos del cuerpo a si mismo
 	int i;
-	for(i = tam - 1; i > 0 ; i--) {
+	for(i = tam - 1 ; i > 0 ; i--) {
 		snake[i].x = snake[i-1].x;
 		snake[i].y = snake[i-1].y;
 	}
@@ -145,14 +143,11 @@ void intro_datos_nuevos(char campo[V][H], int tam) {
 }
 
 void update(char campo[V][H], int tam) {
-	// borrar todos los datos de la matriz
 	intro_campo(campo);
-	// introducir los nuevos datos
 	intro_datos_nuevos(campo, tam);
 }
 
 void input(char campo[V][H], int *tam, int *muerto) {
-	// comprobar si se muere la snake
 	int tecla = 0;
 	if(snake[0].x == 0 || snake[0].x == H - 1 || snake[0].y == 0 || snake[0].y == V - 1) {
 		*muerto = 1;
@@ -164,10 +159,8 @@ void input(char campo[V][H], int *tam, int *muerto) {
 		}
 	}
 
-	// comprobar si se come la fruta
 	if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
 		*tam += 1;
-		// regenerar la fruta y agrandar la serpiente
 		snake[*tam - 1].imagen = 'X';
 
 		fruta.x = rand() % (H - 1);
@@ -180,7 +173,6 @@ void input(char campo[V][H], int *tam, int *muerto) {
 			fruta.y = rand() % (V - 1);
 		}
 	}
-
 
 	if(*muerto == 0) {
 		if(keypressed()) {
@@ -205,7 +197,6 @@ void input(char campo[V][H], int *tam, int *muerto) {
 		}
 	}
 	else allegro_message("GAME OVER");
-
 }
 
 void loop(char campo[V][H], int tam) {
@@ -214,7 +205,6 @@ void loop(char campo[V][H], int tam) {
 		draw(campo);
 		input(campo, &tam, &muerto);
 		update(campo, tam);
-
 		rest(PAUSA);
 	} while (muerto == 0);
 }
