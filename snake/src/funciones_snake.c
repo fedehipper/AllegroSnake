@@ -11,7 +11,7 @@
 #define H 64
 #define N 2560
 
-#define PAUSA 120
+#define PAUSA 100
 #define ESCALA 10
 
 typedef struct {
@@ -32,36 +32,36 @@ BITMAP *comida, *jugador, *cabeza;
 
 void crear_snake() {
 	int i, j;
-	jugador = create_bitmap(10, 10);
+	jugador = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(jugador);
-	for(i = 0; i < 10; i++)
-		for (j = 0; j < 10; j++)
+	for(i = 0 ; i < ESCALA ; i++)
+		for (j = 0 ; j < ESCALA ; j++)
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
 }
 
 void crear_comida() {
 	int i, j;
-	comida = create_bitmap(10, 10);
+	comida = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(comida);
-	for(i = 0; i < 10; i++)
-		for (j = 0; j < 10; j++)
+	for(i = 0 ; i < ESCALA ; i++)
+		for (j = 0 ; j < ESCALA ; j++)
 			putpixel(comida, i, j, palette_color[fruta_bits[j][i]]);
 }
 
 void dibujar_bordes() {
-	rect(screen, 10, 10, 630, 390, palette_color[15]);
+	rect(screen, ESCALA, ESCALA, 630, 390, palette_color[15]);
 }
 
 void draw(char campo[V][H]) {
 	int i,j;
 	clear_bitmap(screen);
 	dibujar_bordes();
-	for(i = 0 ; i < V; i++) {
-		for(j = 0; j < H ; j++) {
+	for(i = 0 ; i < V ; i++) {
+		for(j = 0 ; j < H ; j++) {
 			if(campo[i][j] != ' ' && campo[i][j] != '%')
-				draw_sprite(screen, jugador, j * 10, i * 10);
+				draw_sprite(screen, jugador, j * ESCALA, i * ESCALA);
 			if(campo[i][j] == '%')
-				draw_sprite(screen, comida, j * 10, i * 10);
+				draw_sprite(screen, comida, j * ESCALA, i * ESCALA);
 		}
 	}
 }
@@ -149,28 +149,35 @@ void update(char campo[V][H], int tam) {
 
 void input(char campo[V][H], int *tam, int *muerto) {
 	int tecla = 0;
-	if(snake[0].x == 0 || snake[0].x == H - 1 || snake[0].y == 0 || snake[0].y == V - 1) {
-		*muerto = 1;
-	}
-	int i;
-	for(i = 1 ; i < *tam && *muerto == 0 ; i++) {
-		if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
+	if(*muerto == 0) {
+		if(snake[0].x == 0 || snake[0].x == H - 1 || snake[0].y == 0 || snake[0].y == V - 1) {
 			*muerto = 1;
 		}
 	}
 
-	if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
-		*tam += 1;
-		snake[*tam - 1].imagen = 'X';
-
-		fruta.x = rand() % (H - 1);
-		fruta.y = rand() % (V - 1);
-
-		while(fruta.x == 0) {
-			fruta.x = rand() % (H - 1);
+	if(*muerto == 0) {
+		int i;
+		for(i = 1 ; i < *tam && *muerto == 0 ; i++) {
+			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
+				*muerto = 1;
+			}
 		}
-		while(fruta.y == 0) {
+	}
+
+	if(*muerto == 0) {
+		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
+			*tam += 1;
+			snake[*tam - 1].imagen = 'X';
+
+			fruta.x = rand() % (H - 1);
 			fruta.y = rand() % (V - 1);
+
+			while(fruta.x == 0) {
+				fruta.x = rand() % (H - 1);
+			}
+			while(fruta.y == 0) {
+				fruta.y = rand() % (V - 1);
+			}
 		}
 	}
 
