@@ -3,7 +3,6 @@
 
 #define V 40
 #define H 64
-#define N 100
 
 void inicio(int *tam, char campo[V][H]);
 void intro_datos(char campo[V][H], int tam);
