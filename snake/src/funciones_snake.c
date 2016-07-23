@@ -40,15 +40,6 @@ void crear_snake() {
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
 }
 
-void crear_cabeza() {
-	int i, j;
-	cabeza = create_bitmap(10, 10);
-	clear_bitmap(cabeza);
-	for(i = 0; i < 10; i++)
-		for (j = 0; j < 10; j++)
-			putpixel(cabeza, i, j, palette_color[cabeza_bits[j][i]]);
-}
-
 void crear_comida() {
 	int i, j;
 	comida = create_bitmap(10, 10);
@@ -68,12 +59,10 @@ void draw(char campo[V][H]) {
 	dibujar_bordes();
 	for(i = 0 ; i < V; i++) {
 		for(j = 0; j < H ; j++) {
-			if(campo[i][j] != ' ' && campo[i][j] != '%' && campo[i][j] != 'O')
+			if(campo[i][j] != ' ' && campo[i][j] != '%')
 				draw_sprite(screen, jugador, j * 10, i * 10);
 			if(campo[i][j] == '%')
 				draw_sprite(screen, comida, j * 10, i * 10);
-			if(campo[i][j] == 'O')
-				draw_sprite(screen, cabeza, j * 10, i * 10);
 		}
 	}
 }
@@ -93,7 +82,7 @@ void intro_datos(char campo[V][H], int tam) {
 		snake[i].y = snake[i - 1].y;
 		snake[i].imagen ='X';
 	}
-	snake[0].imagen = 'O';
+	snake[0].imagen = 'X';
 
 	for(i = 0; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
@@ -109,7 +98,6 @@ void inicio(int *tam, char campo[V][H]) {
 
 	crear_snake();
 	crear_comida();
-	crear_cabeza();
 
 	// la cabeza de la serpiente
 	int i;
@@ -201,25 +189,24 @@ void loop(char campo[V][H], int tam) {
 	do {
 		draw(campo);
 		input(campo, &tam, &muerto);
-		// comprobar la tecla que se pulsa
 
 		if(muerto == 0) {
 			if(keypressed()) {
 				tecla = readkey() >> 8;
 
-				if(tecla == KEY_S && snake[0].ModY != -1) {
+				if(tecla == KEY_DOWN && snake[0].ModY != -1) {
 					snake[0].ModX = 0;
 					snake[0].ModY = 1;
 			    }
-				if(tecla == KEY_W  && snake[0].ModY != 1) {
+				if(tecla == KEY_UP  && snake[0].ModY != 1) {
 					snake[0].ModX = 0;
 					snake[0].ModY = -1;
 				}
-				if(tecla == KEY_A  && snake[0].ModX != 1) {
+				if(tecla == KEY_LEFT  && snake[0].ModX != 1) {
 					snake[0].ModX = -1;
 					snake[0].ModY = 0;
 				}
-				if(tecla == KEY_D  && snake[0].ModX != -1) {
+				if(tecla == KEY_RIGHT  && snake[0].ModX != -1) {
 					snake[0].ModX = 1;
 					snake[0].ModY = 0;
 				}
