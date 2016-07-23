@@ -1,8 +1,5 @@
-
 #ifndef SRC_FUNCIONES_SNAKE_H_
 #define SRC_FUNCIONES_SNAKE_H_
-
-
 
 #define V 40
 #define H 64
@@ -17,4 +14,4 @@ void input(char campo[V][H], int *tam, int *muerto);
 void update(char campo[V][H], int tam);
 void intro_datos_nuevos(char campo[V][H], int tam);
 
-#endif /* SRC_FUNCIONES_SNAKE_H_ */
+#endif

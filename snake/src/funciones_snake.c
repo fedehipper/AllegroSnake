@@ -24,7 +24,6 @@ typedef struct {
 	int x,y;
 }frt;
 
-// vector de estructuras
 snk snake[N];
 
 frt fruta;
@@ -100,7 +99,6 @@ void inicio(int *tam, char campo[V][H]) {
 	crear_comida();
 
 	// la cabeza de la serpiente
-	int i;
 	snake[0].x = 32;
 	snake[0].y = 10;
 
@@ -121,6 +119,7 @@ void inicio(int *tam, char campo[V][H]) {
 		fruta.y = rand() % (V - 1);
 	}
 
+	int i;
 	for(i = 0; i < *tam ; i++) {
 		snake[i].ModX = 1;
 		snake[i].ModY = 0;
@@ -153,7 +152,6 @@ void update(char campo[V][H], int tam) {
 }
 
 void input(char campo[V][H], int *tam, int *muerto) {
-
 	// comprobar si se muere la snake
 	if(snake[0].x == 0 || snake[0].x == H - 1 || snake[0].y == 0 || snake[0].y == V - 1) {
 		*muerto = 1;
@@ -212,9 +210,7 @@ void loop(char campo[V][H], int tam) {
 				}
 			}
 		}
-		else {
-			allegro_message("GAME OVER");
-		}
+		else allegro_message("GAME OVER");
 
 		update(campo, tam);
 
