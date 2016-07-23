@@ -179,41 +179,41 @@ void input(char campo[V][H], int *tam, int *muerto) {
 			fruta.y = rand() % (V - 1);
 		}
 	}
+
+	int tecla = 0;
+	if(*muerto == 0) {
+		if(keypressed()) {
+			tecla = readkey() >> 8;
+
+			if(tecla == KEY_DOWN && snake[0].ModY != -1) {
+				snake[0].ModX = 0;
+				snake[0].ModY = 1;
+			}
+			if(tecla == KEY_UP  && snake[0].ModY != 1) {
+				snake[0].ModX = 0;
+				snake[0].ModY = -1;
+			}
+			if(tecla == KEY_LEFT  && snake[0].ModX != 1) {
+				snake[0].ModX = -1;
+				snake[0].ModY = 0;
+			}
+			if(tecla == KEY_RIGHT  && snake[0].ModX != -1) {
+				snake[0].ModX = 1;
+				snake[0].ModY = 0;
+			}
+		}
+	}
+	else allegro_message("GAME OVER");
+
 }
 
 void loop(char campo[V][H], int tam) {
 	int muerto = 0;
-	int tecla = 0;
 	do {
 		draw(campo);
 		input(campo, &tam, &muerto);
-
-		if(muerto == 0) {
-			if(keypressed()) {
-				tecla = readkey() >> 8;
-
-				if(tecla == KEY_DOWN && snake[0].ModY != -1) {
-					snake[0].ModX = 0;
-					snake[0].ModY = 1;
-			    }
-				if(tecla == KEY_UP  && snake[0].ModY != 1) {
-					snake[0].ModX = 0;
-					snake[0].ModY = -1;
-				}
-				if(tecla == KEY_LEFT  && snake[0].ModX != 1) {
-					snake[0].ModX = -1;
-					snake[0].ModY = 0;
-				}
-				if(tecla == KEY_RIGHT  && snake[0].ModX != -1) {
-					snake[0].ModX = 1;
-					snake[0].ModY = 0;
-				}
-			}
-		}
-		else allegro_message("GAME OVER");
-
 		update(campo, tam);
 
 		rest(PAUSA);
-	} while (muerto == 0 && tecla != KEY_ESC);
+	} while (muerto == 0);
 }
