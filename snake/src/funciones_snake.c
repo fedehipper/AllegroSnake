@@ -6,7 +6,6 @@
 #include <fcntl.h>
 #include <time.h>
 #include "bits.h"
-#include <math.h>
 
 #define ALTO 40
 #define ANCHO 64
@@ -211,7 +210,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 void loop(char campo[ALTO][ANCHO], int tam) {
 	int muerto = 0;
 	frt fruta_anterior;
-	int pausa = 700;
+	int pausa = 500;
 	do {
 		draw(campo);
 		fruta_anterior = fruta;
@@ -220,8 +219,9 @@ void loop(char campo[ALTO][ANCHO], int tam) {
 		update(campo, tam, muerto);
 
 		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y) {
-			if(pausa < 400) pausa -= 1;
-			else pausa -= log(pausa);
+			if(pausa > 400) pausa -= 5;
+			if(pausa <= 400 && pausa > 250) pausa -= 2;
+			else pausa -= 1;
 		}
 		rest(pausa);
 	} while (muerto == 0);

@@ -2,7 +2,7 @@ SOURCES = funciones_snake.c snake.c
 HEADERS = bits.h funciones_snake.h
 
 snake : snake.o funciones_snake.o
-	gcc -o snake snake.o funciones_snake.o -lalleg -lm
+	gcc -o snake snake.o funciones_snake.o -lalleg
 
 snake.o : snake.c $(HEADERS)
 	gcc -c snake.c -lalleg
