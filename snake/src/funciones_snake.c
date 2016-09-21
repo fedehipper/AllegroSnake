@@ -39,6 +39,45 @@ void crear_snake() {
 	}
 }
 
+int size_ancho() {
+	int i = 0;
+	while(snake[i].x != 0)
+		i++;
+	return i;
+}
+
+int size_alto() {
+	int i = 0;
+	while(snake[i].y != 0)
+		i++;
+	return i;
+}
+
+int include_ancho(int valor_aleatorio_x) {
+	int i = 0;
+	for(i = 0 ; i < size_ancho() ; i++) {
+		if(snake[i].x == valor_aleatorio_x)
+			break;
+	}
+	if(i < size_ancho())
+		return 1;
+	else
+		return 0;
+}
+
+int include_alto(int valor_aleatorio_y) {
+	int i = 0;
+	for(i = 0 ; i < size_alto() ; i++) {
+		if(snake[i].y == valor_aleatorio_y)
+			break;
+	}
+	if(i < size_alto())
+		return 1;
+	else
+		return 0;
+}
+
+
 void crear_comida() {
 	int i, j;
 	comida = create_bitmap(ESCALA, ESCALA);
@@ -169,14 +208,12 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
-			fruta.x = rand() % (ANCHO - 1);
-			fruta.y = rand() % (ALTO - 1);
+			fruta.x = rand() % (ANCHO - 2) + 1;
+			fruta.y = rand() % (ALTO - 2) + 1;
 
-			while(fruta.x == 0) {
-				fruta.x = rand() % (ANCHO - 1);
-			}
-			while(fruta.y == 0) {
-				fruta.y = rand() % (ALTO - 1);
+			while(include_ancho(fruta.x) && include_alto(fruta.y)) {
+				fruta.x = rand() % (ANCHO - 2) + 1;
+				fruta.y = rand() % (ALTO - 2) + 1;
 			}
 		}
 	}
