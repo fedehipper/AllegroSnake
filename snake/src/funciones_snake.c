@@ -41,40 +41,41 @@ void crear_snake() {
 
 int size_ancho() {
 	int i = 0;
-	while(snake[i].x != 0)
+	while(snake[i].x > 0)
 		i++;
 	return i;
 }
 
 int size_alto() {
 	int i = 0;
-	while(snake[i].y != 0)
+	while(snake[i].y > 0)
 		i++;
 	return i;
 }
 
-int include_ancho(int valor_aleatorio_x) {
+int include_ancho(int valor_x) {
 	int i = 0;
-	for(i = 0 ; i < size_ancho() ; i++) {
-		if(snake[i].x == valor_aleatorio_x)
+	while(snake[i].x > 0) {
+		if(snake[i].x == valor_x)
 			break;
+		else
+			i++;
 	}
-	if(i < size_ancho())
-		return 1;
-	else
-		return 0;
+	if(size_ancho() > i) return 1;
+	else return 0;
 }
 
-int include_alto(int valor_aleatorio_y) {
+
+int include_alto(int valor_y) {
 	int i = 0;
-	for(i = 0 ; i < size_alto() ; i++) {
-		if(snake[i].y == valor_aleatorio_y)
+	while(snake[i].y > 0) {
+		if(snake[i].y == valor_y)
 			break;
+		else
+			i++;
 	}
-	if(i < size_alto())
-		return 1;
-	else
-		return 0;
+	if(size_alto() > i) return 1;
+	else return 0;
 }
 
 
@@ -200,13 +201,10 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
-			fruta.x = rand() % (ANCHO - 2) + 1;
-			fruta.y = rand() % (ALTO - 2) + 1;
-
-			while(include_ancho(fruta.x) && include_alto(fruta.y)) {
+			do {
 				fruta.x = rand() % (ANCHO - 2) + 1;
 				fruta.y = rand() % (ALTO - 2) + 1;
-			}
+			} while (include_ancho(fruta.x) && include_alto(fruta.y));
 		}
 	}
 
@@ -239,7 +237,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 void loop(char campo[ALTO][ANCHO], int tam) {
 	int muerto = 0;
 	frt fruta_anterior;
-	int pausa = 500;
+	int pausa = 250;
 	do {
 		draw(campo);
 		fruta_anterior = fruta;
@@ -247,11 +245,11 @@ void loop(char campo[ALTO][ANCHO], int tam) {
 
 		update(campo, tam, muerto);
 
-		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y) {
-			if(pausa > 400) pausa -= 5;
-			if(pausa <= 400 && pausa > 250) pausa -= 2;
-			else pausa -= 1;
-		}
+//		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y) {
+//			if(pausa > 400) pausa -= 5;
+//			if(pausa <= 400 && pausa > 250) pausa -= 2;
+//			else pausa -= 1;
+//		}
 		rest(pausa);
 	} while (muerto == 0);
 }
