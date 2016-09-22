@@ -146,16 +146,8 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 	*tam = 4;
 	srand(time(NULL));
 
-	fruta.x = rand() % (ANCHO - 1);
-	fruta.y = rand() % (ALTO - 1);
-
-	while(fruta.x == 0) {
-		fruta.x = rand() % (ANCHO - 1);
-	}
-
-	while(fruta.y == 0) {
-		fruta.y = rand() % (ALTO - 1);
-	}
+	fruta.x = rand() % (ANCHO - 2) + 1;
+	fruta.y = rand() % (ALTO - 2) + 1;
 
 	int i;
 	for(i = 0; i < *tam ; i++) {
