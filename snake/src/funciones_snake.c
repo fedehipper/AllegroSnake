@@ -28,6 +28,30 @@ frt fruta;
 
 BITMAP *comida, *jugador, *cabeza;
 
+frt espacios_vacios[LIMITE_SNAKE];
+
+void inicializar_espacios_vacios() {
+	int i;
+	for(i = 0 ; i < LIMITE_SNAKE ; i++) {
+		espacios_vacios[i].x = 0;
+		espacios_vacios[i].y = 0;
+	}
+}
+
+int llenar_espacios(char campo[ALTO][ANCHO]) {
+	int i, j, tamanio = 0;
+	for(j = 1 ; j < ALTO - 1 ; j++) {
+		for(i = 1 ; i < ANCHO - 1 ; i++) {
+			if(campo[j][i] == ' ') {
+				espacios_vacios[tamanio].x = i;
+				espacios_vacios[tamanio].y = j;
+				tamanio++;
+			}
+		}
+	}
+	return tamanio;
+}
+
 void crear_snake() {
 	int i, j;
 	jugador = create_bitmap(ESCALA, ESCALA);
@@ -171,16 +195,11 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
-			fruta.x = rand() % (ANCHO - 1);
-			fruta.y = rand() % (ALTO - 1);
+			inicializar_espacios_vacios();
+			int posicion = rand() % llenar_espacios(campo);
 
-			while(fruta.x == 0) {
-				fruta.x = rand() % (ANCHO - 1);
-			}
-			while(fruta.y == 0) {
-				fruta.y = rand() % (ALTO - 1);
-			}
-
+			fruta.x = espacios_vacios[posicion].x;
+			fruta.y = espacios_vacios[posicion].y;
 		}
 	}
 
@@ -213,7 +232,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 void loop(char campo[ALTO][ANCHO], int tam) {
 	int muerto = 0;
 	frt fruta_anterior;
-	int pausa = 250;
+	int pausa = 500;
 	do {
 		draw(campo);
 		fruta_anterior = fruta;
@@ -221,11 +240,11 @@ void loop(char campo[ALTO][ANCHO], int tam) {
 
 		update(campo, tam, muerto);
 
-//		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y) {
-//			if(pausa > 400) pausa -= 5;
-//			if(pausa <= 400 && pausa > 250) pausa -= 2;
-//			else pausa -= 1;
-//		}
+		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y) {
+			if(pausa > 400) pausa -= 5;
+			if(pausa <= 400 && pausa > 250) pausa -= 2;
+			else pausa -= 1;
+		}
 		rest(pausa);
 	} while (muerto == 0);
 }
