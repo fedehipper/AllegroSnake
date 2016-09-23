@@ -39,46 +39,6 @@ void crear_snake() {
 	}
 }
 
-int size_ancho() {
-	int i = 0;
-	while(snake[i].x > 0)
-		i++;
-	return i;
-}
-
-int size_alto() {
-	int i = 0;
-	while(snake[i].y > 0)
-		i++;
-	return i;
-}
-
-int include_ancho(int valor_x) {
-	int i = 0;
-	while(snake[i].x > 0) {
-		if(snake[i].x == valor_x)
-			break;
-		else
-			i++;
-	}
-	if(size_ancho() > i) return 1;
-	else return 0;
-}
-
-
-int include_alto(int valor_y) {
-	int i = 0;
-	while(snake[i].y > 0) {
-		if(snake[i].y == valor_y)
-			break;
-		else
-			i++;
-	}
-	if(size_alto() > i) return 1;
-	else return 0;
-}
-
-
 void crear_comida() {
 	int i, j;
 	comida = create_bitmap(ESCALA, ESCALA);
@@ -147,8 +107,15 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 	*tam = 4;
 	srand(time(NULL));
 
-	fruta.x = rand() % (ANCHO - 2) + 1;
-	fruta.y = rand() % (ALTO - 2) + 1;
+	fruta.x = rand() % (ANCHO - 1);
+	fruta.y = rand() % (ALTO - 1);
+
+	while(fruta.x == 0) {
+		fruta.x = rand() % (ANCHO - 1);
+	}
+	while(fruta.y == 0) {
+		fruta.y = rand() % (ALTO - 1);
+	}
 
 	int i;
 	for(i = 0; i < *tam ; i++) {
@@ -162,12 +129,15 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
 	// crear la persecucion de los elementos del cuerpo a si mismo
 	int i;
+
 	for(i = tam - 1 ; i > 0 ; i--) {
 		snake[i].x = snake[i-1].x;
 		snake[i].y = snake[i-1].y;
 	}
+
 	snake[0].x += snake[0].mod_x;
 	snake[0].y += snake[0].mod_y;
+
 	for(i = 0 ; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
 	}
@@ -201,10 +171,16 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
-			do {
-				fruta.x = rand() % (ANCHO - 2) + 1;
-				fruta.y = rand() % (ALTO - 2) + 1;
-			} while (include_ancho(fruta.x) && include_alto(fruta.y));
+			fruta.x = rand() % (ANCHO - 1);
+			fruta.y = rand() % (ALTO - 1);
+
+			while(fruta.x == 0) {
+				fruta.x = rand() % (ANCHO - 1);
+			}
+			while(fruta.y == 0) {
+				fruta.y = rand() % (ALTO - 1);
+			}
+
 		}
 	}
 
