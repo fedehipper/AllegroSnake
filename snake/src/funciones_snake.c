@@ -75,7 +75,7 @@ void crear_comida() {
 }
 
 void dibujar_bordes() {
-	rect(screen, ESCALA, ESCALA, 630, 390, palette_color[15]);
+	rect(screen, ESCALA, ESCALA, ANCHO * 10 - 10, ALTO * 10 - 10, palette_color[15]);
 }
 
 void draw(char campo[ALTO][ANCHO]) {
@@ -101,7 +101,6 @@ void intro_campo(char campo[ALTO][ANCHO]) {
 	}
 }
 
-// mete todos los datos en la matriz campo
 void intro_datos(char campo[ALTO][ANCHO], int tam) {
 	int i;
 	for(i = 1 ; i < tam ; i++) {
@@ -121,7 +120,7 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 	allegro_init();
 	install_keyboard();
 	install_timer();
-	set_gfx_mode(GFX_SAFE, 640, 400, 0, 0);
+	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
 	crear_snake();
 	crear_comida();
 
@@ -131,15 +130,8 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 	*tam = 4;
 	srand(time(NULL));
 
-	fruta.x = rand() % (ANCHO - 1);
-	fruta.y = rand() % (ALTO - 1);
-
-	while(fruta.x == 0) {
-		fruta.x = rand() % (ANCHO - 1);
-	}
-	while(fruta.y == 0) {
-		fruta.y = rand() % (ALTO - 1);
-	}
+	fruta.x = rand() % (ANCHO - 2) + 1;
+	fruta.y = rand() % (ALTO - 2) + 1;
 
 	int i;
 	for(i = 0; i < *tam ; i++) {
@@ -151,9 +143,7 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 }
 
 void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
-	// crear la persecucion de los elementos del cuerpo a si mismo
 	int i;
-
 	for(i = tam - 1 ; i > 0 ; i--) {
 		snake[i].x = snake[i-1].x;
 		snake[i].y = snake[i-1].y;
@@ -170,7 +160,14 @@ void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
 
 void update(char campo[ALTO][ANCHO], int tam, int muerto) {
 	intro_campo(campo);
-	if(muerto == 0) intro_datos_nuevos(campo, tam);
+	if(muerto == 0) {
+		intro_datos_nuevos(campo, tam);
+	}
+}
+
+void asignar_movimiento(int mov_x, int mov_y) {
+	snake[0].mod_x = mov_x;
+	snake[0].mod_y = mov_y;
 }
 
 int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
@@ -208,21 +205,18 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			tecla = readkey() >> 8;
 
 			if(tecla == KEY_DOWN && snake[0].mod_y != -1) {
-				snake[0].mod_x = 0;
-				snake[0].mod_y = 1;
+				asignar_movimiento(0, 1);
 			}
 			if(tecla == KEY_UP && snake[0].mod_y != 1) {
-				snake[0].mod_x = 0;
-				snake[0].mod_y = -1;
+				asignar_movimiento(0, -1);
 			}
 			if(tecla == KEY_LEFT && snake[0].mod_x != 1) {
-				snake[0].mod_x = -1;
-				snake[0].mod_y = 0;
+				asignar_movimiento(-1, 0);
 			}
 			if(tecla == KEY_RIGHT && snake[0].mod_x != -1) {
-				snake[0].mod_x = 1;
-				snake[0].mod_y = 0;
+				asignar_movimiento(1, 0);
 			}
+
 		}
 	}
 	else allegro_message("GAME OVER");
@@ -231,20 +225,12 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 
 void loop(char campo[ALTO][ANCHO], int tam) {
 	int muerto = 0;
-	frt fruta_anterior;
-	int pausa = 500;
+	int pausa = 250;
 	do {
 		draw(campo);
-		fruta_anterior = fruta;
 		tam = input(campo, tam, &muerto);
 
 		update(campo, tam, muerto);
-
-		if(fruta.x != fruta_anterior.x && fruta.y != fruta_anterior.y) {
-			if(pausa > 400) pausa -= 5;
-			if(pausa <= 400 && pausa > 250) pausa -= 2;
-			else pausa -= 1;
-		}
 		rest(pausa);
 	} while (muerto == 0);
 }
