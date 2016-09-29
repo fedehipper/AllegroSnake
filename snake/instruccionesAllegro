@@ -1,6 +1,0 @@
-1) sudo apt-get install liballegro4.2-dev
-
-2 ) allegro-config --libs 
-copiar al linker del eclipse esta direccion sacando la -L del comienzo
-
-ej:  -L/usr/lib/i386-linux-gnu -lalleg

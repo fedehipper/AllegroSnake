@@ -1,11 +1,9 @@
 #include <allegro.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <termios.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
-#include "bits.h"
+
 
 #define ALTO 40
 #define ANCHO 64
@@ -25,6 +23,32 @@ typedef struct {
 snk snake[LIMITE_SNAKE];
 
 frt fruta;
+
+typedef int tipo_snake[10][10];
+
+tipo_snake vivora =
+   {{15,15,15,15,15,15,15,15,15},
+    {15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+    {15,15,15,15,15,15,15,15,15}};
+
+tipo_snake fruta_bits =
+   {{0,0,0,15,15,15,0,0,0},
+    {0,0,0,15,15,15,0,0,0},
+	{0,0,0,15,15,15,0,0,0},
+	{15,15,15,0,0,0,15,15,15},
+    {15,15,15,0,0,0,15,15,15},
+    {15,15,15,0,0,0,15,15,15},
+	{0,0,0,15,15,15,0,0,0},
+    {0,0,0,15,15,15,0,0,0},
+    {0,0,0,15,15,15,0,0,0}};
+
+
 
 BITMAP *comida, *jugador, *cabeza;
 
@@ -216,7 +240,6 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			if(tecla == KEY_RIGHT && snake[0].mod_x != -1) {
 				asignar_movimiento(1, 0);
 			}
-
 		}
 	}
 	else allegro_message("GAME OVER");
@@ -234,3 +257,17 @@ void loop(char campo[ALTO][ANCHO], int tam) {
 		rest(pausa);
 	} while (muerto == 0);
 }
+
+
+int main(void) {
+	int tam;
+	char campo[40][64];
+
+	inicio(&tam, campo);
+	loop(campo, tam);
+
+	allegro_exit();
+	return EXIT_SUCCESS;
+}
+END_OF_MAIN();
+
