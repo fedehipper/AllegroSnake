@@ -194,6 +194,15 @@ void asignar_movimiento(int mov_x, int mov_y) {
 	snake[0].mod_y = mov_y;
 }
 
+void pausar() {
+	int tecla = 0;
+	while(tecla != KEY_ENTER) {
+		if(keypressed()) {
+			tecla = readkey() >> 8;
+		}
+	}
+}
+
 int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 	int tecla = 0;
 	if(*muerto == 0) {
@@ -228,6 +237,10 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 		if(keypressed()) {
 			tecla = readkey() >> 8;
 
+			if(tecla == KEY_ENTER) {
+				pausar();
+			}
+
 			if(tecla == KEY_DOWN && snake[0].mod_y != -1) {
 				asignar_movimiento(0, 1);
 			}
@@ -249,11 +262,19 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 void loop(char campo[ALTO][ANCHO], int tam) {
 	int muerto = 0;
 	int pausa = 250;
+	int veces = 0;
 	do {
+		veces++;
 		draw(campo);
 		tam = input(campo, tam, &muerto);
 
 		update(campo, tam, muerto);
+
+		if(veces > 10) {
+			veces = 0;
+			pausa -= 1;
+		}
+
 		rest(pausa);
 	} while (muerto == 0);
 }
