@@ -5,6 +5,8 @@
 *.elf
 *.settings.xml
 
+snake/.settings/language.settings.xml
+
 /Debug/
 
 # Precompiled Headers
