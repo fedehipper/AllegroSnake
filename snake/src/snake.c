@@ -54,7 +54,7 @@ BITMAP *comida, *jugador, *cabeza;
 
 frt espacios_vacios[LIMITE_SNAKE];
 
-void inicializar_espacios_vacios() {
+void inicializar_espacios_vacios(void) {
 	int i;
 	for(i = 0 ; i < LIMITE_SNAKE ; i++) {
 		espacios_vacios[i].x = 0;
@@ -76,7 +76,7 @@ int llenar_espacios(char campo[ALTO][ANCHO]) {
 	return tamanio;
 }
 
-void crear_snake() {
+void crear_snake(void) {
 	int i, j;
 	jugador = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(jugador);
@@ -87,7 +87,7 @@ void crear_snake() {
 	}
 }
 
-void crear_comida() {
+void crear_comida(void) {
 	int i, j;
 	comida = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(comida);
@@ -98,7 +98,7 @@ void crear_comida() {
 	}
 }
 
-void dibujar_bordes() {
+void dibujar_bordes(void) {
 	rect(screen, ESCALA, ESCALA, ANCHO * 10 - 10, ALTO * 10 - 10, palette_color[15]);
 }
 
@@ -195,7 +195,7 @@ void asignar_movimiento(int mov_x, int mov_y) {
 }
 
 
-int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
+int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, int puntaje_actual) {
 	int tecla = 0;
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) {
@@ -247,18 +247,23 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto) {
 			}
 		}
 	}
-	else allegro_message("GAME OVER");
+	else {
+		textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
+		textprintf_centre_ex(screen, font, 325, 200, 15, 0, "TU PUNTAJE: %d", puntaje_actual);
+		textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE RECORD: %d", puntaje_record);
+		readkey();
+	}
 	return tam;
 }
 
-void loop(char campo[ALTO][ANCHO], int tam) {
+void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) {
 	int muerto = 0;
 	int pausa = 250;
 	int veces = 0;
+
 	do {
-		veces++;
 		draw(campo);
-		tam = input(campo, tam, &muerto);
+		tam = input(campo, tam, &muerto, puntaje_record, tam - 4);
 
 		update(campo, tam, muerto);
 
@@ -266,9 +271,16 @@ void loop(char campo[ALTO][ANCHO], int tam) {
 			veces = 0;
 			pausa -= 1;
 		}
-
 		rest(pausa);
 	} while (muerto == 0);
+
+	int puntaje_actual = tam - 4;
+	archivo = fopen("puntaje_record.txt", "w");
+	if(puntaje_record <= puntaje_actual)
+		fprintf(archivo, "%d", puntaje_actual);
+	else
+		fprintf(archivo, "%d", puntaje_record);
+	fclose(archivo);
 }
 
 
@@ -276,11 +288,21 @@ int main(void) {
 	int tam;
 	char campo[40][64];
 
+	FILE * archivo;
+	int puntaje_record;
+	archivo = fopen("puntaje_record.txt", "r");
+
+	if(archivo != NULL) {
+		fscanf(archivo, "%d", &puntaje_record);
+		fclose(archivo);
+	}
+	else
+		puntaje_record = 0;
+
 	inicio(&tam, campo);
-	loop(campo, tam);
+	loop(campo, tam, puntaje_record, archivo);
 
 	allegro_exit();
 	return EXIT_SUCCESS;
 }
 END_OF_MAIN();
-
