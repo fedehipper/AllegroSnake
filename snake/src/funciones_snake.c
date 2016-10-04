@@ -11,6 +11,7 @@
 #define ANCHO 64
 #define LIMITE_SNAKE 2560
 #define ESCALA 10
+#define TAMANIO_INICIAL 4
 
 typedef struct {
 	int x,y;
@@ -128,7 +129,7 @@ void inicio(int *tam, char campo[ALTO][ANCHO]) {
 	snake[0].x = 32;
 	snake[0].y = 10;
 
-	*tam = 4;
+	*tam = TAMANIO_INICIAL;
 	srand(time(NULL));
 
 	fruta.x = rand() % (ANCHO - 2) + 1;
@@ -171,7 +172,7 @@ void asignar_movimiento(int mov_x, int mov_y) {
 	snake[0].mod_y = mov_y;
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, int puntaje_actual) {
+int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 	int tecla = 0;
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) {
@@ -225,7 +226,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, int
 	}
 	else {
 		textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
-		textprintf_centre_ex(screen, font, 325, 200, 15, 0, "TU PUNTAJE: %d", puntaje_actual);
+		textprintf_centre_ex(screen, font, 325, 200, 15, 0, "TU PUNTAJE: %d", tam - TAMANIO_INICIAL);
 		textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE RECORD: %d", puntaje_record);
 		readkey();
 	}
@@ -239,7 +240,7 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) 
 
 	do {
 		draw(campo);
-		tam = input(campo, tam, &muerto, puntaje_record, tam - 4);
+		tam = input(campo, tam, &muerto, puntaje_record);
 
 		update(campo, tam, muerto);
 
