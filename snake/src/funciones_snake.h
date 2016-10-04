@@ -5,6 +5,6 @@
 #define ANCHO 64
 
 void inicio(int *tam, char campo[ALTO][ANCHO]);
-void loop(char campo[ALTO][ANCHO], int tam);
+void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo);
 
 #endif

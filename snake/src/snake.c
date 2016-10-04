@@ -4,12 +4,22 @@
 #include "funciones_snake.h"
 
 int main(void) {
-
 	int tam;
 	char campo[40][64];
 
+	FILE * archivo;
+	int puntaje_record;
+	archivo = fopen("puntaje_record.txt", "r");
+
+	if(archivo != NULL) {
+		fscanf(archivo, "%d", &puntaje_record);
+		fclose(archivo);
+	}
+	else
+		puntaje_record = 0;
+
 	inicio(&tam, campo);
-	loop(campo, tam);
+	loop(campo, tam, puntaje_record, archivo);
 
 	allegro_exit();
 	return EXIT_SUCCESS;
