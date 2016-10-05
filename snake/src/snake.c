@@ -9,16 +9,17 @@
 #define ANCHO 64
 #define LIMITE_SNAKE 2560
 #define ESCALA 10
+#define TOTAL_FRUTAS 2556
 
 typedef struct {
 	int x,y;
 	int mod_x, mod_y;
 	char imagen;
-}snk;
+} snk;
 
 typedef struct {
 	int x,y;
-}frt;
+} frt;
 
 snk snake[LIMITE_SNAKE];
 
@@ -47,7 +48,6 @@ tipo_snake fruta_bits =
 	{0,0,0,15,15,15,0,0,0},
     {0,0,0,15,15,15,0,0,0},
     {0,0,0,15,15,15,0,0,0}};
-
 
 
 BITMAP *comida, *jugador, *cabeza;
@@ -102,7 +102,7 @@ void dibujar_bordes(void) {
 	rect(screen, ESCALA, ESCALA, ANCHO * 10 - 10, ALTO * 10 - 10, palette_color[15]);
 }
 
-void draw(char campo[ALTO][ANCHO]) {
+void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual) {
 	int i,j;
 	clear_bitmap(screen);
 	dibujar_bordes();
@@ -114,6 +114,8 @@ void draw(char campo[ALTO][ANCHO]) {
 				draw_sprite(screen, comida, j * ESCALA, i * ESCALA);
 		}
 	}
+	textprintf_centre_ex(screen, font, 30, 2, 15, 0, "%d", puntaje_actual);
+	textprintf_centre_ex(screen, font, 610, 2, 15, 0, "%d", puntaje_record);
 }
 
 void intro_campo(char campo[ALTO][ANCHO]) {
@@ -246,11 +248,14 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 				asignar_movimiento(1, 0);
 			}
 		}
-	}
-	else {
-		textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
-		textprintf_centre_ex(screen, font, 325, 200, 15, 0, "TU PUNTAJE: %d", tam - 4);
-		textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE RECORD: %d", puntaje_record);
+	} else {
+		if(tam - 4 == TOTAL_FRUTAS) {
+			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "YOU WIN!");
+		} else {
+			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
+			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE: %d", tam - 4);
+			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", puntaje_record);
+		}
 		readkey();
 	}
 	return tam;
@@ -262,7 +267,7 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) 
 	int veces = 0;
 
 	do {
-		draw(campo);
+		draw(campo, puntaje_record, tam - 4);
 		tam = input(campo, tam, &muerto, puntaje_record);
 
 		update(campo, tam, muerto);
