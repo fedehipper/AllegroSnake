@@ -12,6 +12,7 @@
 #define LIMITE_SNAKE 2560
 #define ESCALA 10
 #define TAMANIO_INICIAL 4
+#define TOTAL_FRUTAS 2556
 
 typedef struct {
 	int x,y;
@@ -79,7 +80,7 @@ void dibujar_bordes(void) {
 	rect(screen, ESCALA, ESCALA, ANCHO * 10 - 10, ALTO * 10 - 10, palette_color[15]);
 }
 
-void draw(char campo[ALTO][ANCHO]) {
+void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual) {
 	int i,j;
 	clear_bitmap(screen);
 	dibujar_bordes();
@@ -91,6 +92,8 @@ void draw(char campo[ALTO][ANCHO]) {
 				draw_sprite(screen, comida, j * ESCALA, i * ESCALA);
 		}
 	}
+	textprintf_centre_ex(screen, font, 30, 2, 15, 0, "%d", puntaje_actual);
+	textprintf_centre_ex(screen, font, 610, 2, 15, 0, "%d", puntaje_record);
 }
 
 void intro_campo(char campo[ALTO][ANCHO]) {
@@ -225,9 +228,13 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 		}
 	}
 	else {
-		textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
-		textprintf_centre_ex(screen, font, 325, 200, 15, 0, "TU PUNTAJE: %d", tam - TAMANIO_INICIAL);
-		textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE RECORD: %d", puntaje_record);
+		if(tam - TAMANIO_INICIAL == TOTAL_FRUTAS) {
+			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "YOU WIN!");
+		} else {
+			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
+			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE: %d", tam - TAMANIO_INICIAL);
+			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", puntaje_record);
+		}
 		readkey();
 	}
 	return tam;
@@ -239,7 +246,7 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) 
 	int veces = 0;
 
 	do {
-		draw(campo);
+		draw(campo, puntaje_record, tam - TAMANIO_INICIAL);
 		tam = input(campo, tam, &muerto, puntaje_record);
 
 		update(campo, tam, muerto);
