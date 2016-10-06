@@ -196,6 +196,16 @@ void asignar_movimiento(int mov_x, int mov_y) {
 	snake[0].mod_y = mov_y;
 }
 
+void exit_snake(void) {
+	int tecla = 0;
+	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
+		while(1) {
+			if(keypressed()) {
+				tecla = readkey() >> 8;
+				if(tecla == KEY_ENTER) break;
+			}
+		}
+}
 
 int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 	int tecla = 0;
@@ -251,13 +261,14 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 	} else {
 		if(tam - 4 == TOTAL_FRUTAS) {
 			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "YOU WIN!");
+
 		} else {
 			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
-			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE: %d", tam - 4);
+			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - 4);
 			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", puntaje_record);
 		}
-		readkey();
-	}
+		exit_snake();
+		}
 	return tam;
 }
 
