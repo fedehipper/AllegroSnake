@@ -179,10 +179,8 @@ void exit_snake(void) {
 	int tecla = 0;
 	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
 	while(1) {
-		if(keypressed()) {
-			tecla = readkey() >> 8;
-			if(tecla == KEY_ENTER) break;
-		}
+		tecla = readkey() >> 8;
+		if(tecla == KEY_ENTER) break;
 	}
 }
 
