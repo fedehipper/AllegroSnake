@@ -120,11 +120,40 @@ void intro_datos(char campo[ALTO][ANCHO], int tam) {
 	campo[fruta.y][fruta.x] = '%';
 }
 
-void inicio(int *tam, char campo[ALTO][ANCHO]) {
+void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
+	while(1) {
+		dibujar_bordes();
+		textprintf_justify_ex(screen, font, 30, 10, 20, 0, 15, 0, "SELECT LEVEL: ");
+		textprintf_justify_ex(screen, font, 30, 10, 40, 0, 15, 0, "1 EASY");
+		textprintf_justify_ex(screen, font, 30, 10, 60, 0, 15, 0, "2 MEDIUM");
+		textprintf_justify_ex(screen, font, 30, 10, 80, 0, 15, 0, "3 PROFFESIONAL");
+		int tecla = 0;
+		if(keypressed()) {
+			tecla = readkey() >> 8;
+			switch (tecla) {
+				case KEY_1: case KEY_1_PAD: *nivel = 1;
+				break;
+				case KEY_2: case KEY_2_PAD: *nivel = 2;
+				break;
+				case KEY_3: case KEY_3_PAD: *nivel = 3;
+				break;
+				default:
+					textprintf_centre_ex(screen, font, 325, 190, 15, 0, "AGAIN SELECT A VALID LEVEL ...");
+					continue;
+				break;
+			}
+			break;
+		}
+	}
+}
+
+void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel) {
 	allegro_init();
 	install_keyboard();
 	install_timer();
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
+
+	seleccionar_nivel(campo, nivel);
 
 	crear_snake();
 	crear_comida();
@@ -249,10 +278,21 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 	return tam;
 }
 
-void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) {
-	int muerto = 0;
-	int pausa = 250;
-	int veces = 0;
+void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
+	int muerto = 0, pausa = 0;
+
+
+	switch(*nivel) {
+		case 1 :
+			pausa = 300;
+			break;
+		case 2 :
+			pausa = 200;
+			break;
+		case 3 :
+			pausa = 100;
+			break;
+	}
 
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL);
@@ -260,10 +300,6 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) 
 
 		update(campo, tam, muerto);
 
-		if(veces > 10) {
-			veces = 0;
-			pausa -= 1;
-		}
 		rest(pausa);
 	} while (muerto == 0);
 

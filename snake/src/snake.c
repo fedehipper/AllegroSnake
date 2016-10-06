@@ -18,8 +18,9 @@ int main(void) {
 	else
 		puntaje_record = 0;
 
-	inicio(&tam, campo);
-	loop(campo, tam, puntaje_record, archivo);
+	int nivel = 0;
+	inicio(&tam, campo, &nivel);
+	loop(campo, tam, puntaje_record, archivo, &nivel);
 
 	allegro_exit();
 	return EXIT_SUCCESS;
