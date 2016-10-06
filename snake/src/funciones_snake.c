@@ -241,7 +241,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "YOU WIN!");
 		} else {
 			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
-			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "PUNTAJE: %d", tam - TAMANIO_INICIAL);
+			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
 			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", puntaje_record);
 		}
 		exit_snake();
