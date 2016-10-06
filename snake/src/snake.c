@@ -200,10 +200,8 @@ void exit_snake(void) {
 	int tecla = 0;
 	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
 	while(1) {
-		if(keypressed()) {
-			tecla = readkey() >> 8;
-			if(tecla == KEY_ENTER) break;
-		}
+		tecla = readkey() >> 8;
+		if(tecla == KEY_ENTER) break;
 	}
 }
 
@@ -273,9 +271,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 }
 
 void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo) {
-	int muerto = 0;
-	int pausa = 250;
-	int veces = 0;
+	int muerto = 0, pausa = 250, veces = 0;
 
 	do {
 		draw(campo, puntaje_record, tam - 4);
