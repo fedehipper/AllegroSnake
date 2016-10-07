@@ -146,11 +146,13 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 }
 
 void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
-	if(archivo != NULL)
+	if(archivo != NULL) {
 		fscanf(archivo, "%d", puntaje_record);
+		fclose(archivo);
+	}
 	else
 		*puntaje_record = 0;
-	fclose(archivo);
+
 }
 
 void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
@@ -246,7 +248,9 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 		if(keypressed()) {
 			tecla = readkey() >> 8;
 
-			if(tecla == KEY_P) readkey();
+			if(tecla == KEY_P) {
+				readkey();
+			}
 
 			int mov_x = 0, mov_y = 0;
 
@@ -254,8 +258,8 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 			if(tecla == KEY_UP && snake[0].mod_y != 1) mov_y = -1;
 			if(tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
 			if(tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
-
-			asignar_movimiento(mov_x, mov_y);
+			if(mov_x != 0 || mov_y != 0)
+				asignar_movimiento(mov_x, mov_y);
 		}
 	}
 	else {

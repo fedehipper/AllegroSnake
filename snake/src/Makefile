@@ -12,7 +12,7 @@ funciones_snake.o : funciones_snake.c $(HEADERS)
 	
 clean:
 	rm -f snake \
-		snake.o funciones_snake.o
+		snake.o funciones_snake.o puntaje_record.txt
 
 send:
 		tar zcvf snake.tar $(SOURCES) $(HEADERS) Makefile
