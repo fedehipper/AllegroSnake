@@ -119,8 +119,6 @@ void intro_datos(char campo[ALTO][ANCHO], int tam) {
 }
 
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
-	SAMPLE * sonido;
-	sonido = load_sample("seleccion_fallida.wav");
 	while(1) {
 		dibujar_bordes();
 		textprintf_justify_ex(screen, font, 30, 10, 20, 0, 15, 0, "SELECT LEVEL: ");
@@ -138,7 +136,6 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 				case KEY_3: case KEY_3_PAD: *nivel = 3;
 				break;
 				default:
-					play_sample(sonido, 200, 150, 1000, 0);
 					textprintf_centre_ex(screen, font, 325, 190, 15, 0, "AGAIN SELECT A VALID LEVEL ...");
 					continue;
 				break;
@@ -225,13 +222,10 @@ void asignar_movimiento(int mov_x, int mov_y) {
 
 void exit_snake(void) {
 	int tecla = 0;
-	SAMPLE * sonido_fallido;
-	sonido_fallido = load_sample("seleccion_fallida.wav");
 	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
 	while(1) {
 		tecla = readkey() >> 8;
 		if(tecla == KEY_ENTER) break;
-		else play_sample(sonido_fallido, 200, 150, 1000, 0);
 	}
 }
 
