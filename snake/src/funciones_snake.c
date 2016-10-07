@@ -119,6 +119,8 @@ void intro_datos(char campo[ALTO][ANCHO], int tam) {
 }
 
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
+	SAMPLE * sonido;
+	sonido = load_sample("seleccion_fallida.wav");
 	while(1) {
 		dibujar_bordes();
 		textprintf_justify_ex(screen, font, 30, 10, 20, 0, 15, 0, "SELECT LEVEL: ");
@@ -136,6 +138,7 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 				case KEY_3: case KEY_3_PAD: *nivel = 3;
 				break;
 				default:
+					play_sample(sonido, 200, 150, 1000, 0);
 					textprintf_centre_ex(screen, font, 325, 190, 15, 0, "AGAIN SELECT A VALID LEVEL ...");
 					continue;
 				break;
@@ -152,7 +155,15 @@ void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
 	}
 	else
 		*puntaje_record = 0;
+}
 
+void instalar_sonidos(void) {
+	int driver_digi = 1, driver_midi = 0;
+	detect_digi_driver(driver_digi);
+	detect_midi_driver(driver_midi);
+	reserve_voices(5, 5);
+	install_sound(driver_digi, driver_midi, "cfg_path");
+	set_volume(200, 100);
 }
 
 void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
@@ -160,6 +171,8 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 	install_keyboard();
 	install_timer();
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
+
+	instalar_sonidos();
 
 	seleccionar_nivel(campo, nivel);
 	leer_puntaje_record(nivel, archivo, puntaje_record);
@@ -212,14 +225,28 @@ void asignar_movimiento(int mov_x, int mov_y) {
 
 void exit_snake(void) {
 	int tecla = 0;
+	SAMPLE * sonido_fallido;
+	sonido_fallido = load_sample("seleccion_fallida.wav");
 	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
 	while(1) {
 		tecla = readkey() >> 8;
 		if(tecla == KEY_ENTER) break;
+		else play_sample(sonido_fallido, 200, 150, 1000, 0);
 	}
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
+void pausa(int tecla, SAMPLE * sonido_pausa) {
+	play_sample(sonido_pausa, 200, 150, 1000, 0);
+	while(1) {
+		readkey();
+		if(tecla == KEY_P) {
+			play_sample(sonido_pausa, 200, 150, 1000, 0);
+			break;
+		}
+	}
+}
+
+int input(char campo[ALTO][ANCHO], int tam, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto) {
 	int tecla = 0;
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
@@ -231,8 +258,12 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) *muerto = 1;
 	}
 
+	if(*muerto) play_sample(s_impacto, 200, 150, 1000, 0);
+
 	if(*muerto == 0) {
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
+			play_sample(s_comer, 200, 150, 1000, 0);
+
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
@@ -248,9 +279,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 		if(keypressed()) {
 			tecla = readkey() >> 8;
 
-			if(tecla == KEY_P) {
-				readkey();
-			}
+			if(tecla == KEY_P) pausa(tecla, s_pausa);
 
 			int mov_x = 0, mov_y = 0;
 
@@ -268,7 +297,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 		} else {
 			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
 			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
-			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", puntaje_record);
+			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", record);
 		}
 		exit_snake();
 	}
@@ -290,9 +319,14 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 			break;
 	}
 
+	SAMPLE * sonido_comer = load_sample("comer.wav");
+	SAMPLE * sonido_pausa = load_sample("pause.wav");
+	SAMPLE * sonido_impacto = load_sample("impact.wav");
+
+
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL);
-		tam = input(campo, tam, &muerto, puntaje_record);
+		tam = input(campo, tam, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto);
 		update(campo, tam, muerto);
 		rest(pausa);
 	} while (muerto == 0);
