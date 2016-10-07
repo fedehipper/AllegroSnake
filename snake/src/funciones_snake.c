@@ -60,9 +60,8 @@ void crear_snake(void) {
 	jugador = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(jugador);
 	for(i = 0 ; i < ESCALA ; i++) {
-		for (j = 0 ; j < ESCALA ; j++) {
+		for (j = 0 ; j < ESCALA ; j++)
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
-		}
 	}
 }
 
@@ -71,9 +70,8 @@ void crear_comida(void) {
 	comida = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(comida);
 	for(i = 0 ; i < ESCALA ; i++) {
-		for (j = 0 ; j < ESCALA ; j++) {
+		for (j = 0 ; j < ESCALA ; j++)
 			putpixel(comida, i, j, palette_color[fruta_bits[j][i]]);
-		}
 	}
 }
 
@@ -100,9 +98,8 @@ void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual) {
 void intro_campo(char campo[ALTO][ANCHO]) {
 	int i, j;
 	for(i = 0; i < ALTO; i++) {
-		for(j = 0; j < ANCHO; j++) {
+		for(j = 0; j < ANCHO; j++)
 			campo[i][j] = ' ';
-		}
 	}
 }
 
@@ -148,18 +145,12 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	}
 }
 
-int seleccionar_puntaje_record(int * nivel, FILE * archivo) {
-	if(archivo != NULL) {
-		char cadena[MAX_DIGITOS_PUNTAJE];
-		int i;
-		for(i = 0 ; i < *nivel ; i++) {
-			fgets(cadena, MAX_DIGITOS_PUNTAJE + 1, archivo);
-		}
-		fclose(archivo);
-		return atoi(cadena);
-	}
+void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
+	if(archivo != NULL)
+		fscanf(archivo, "%d", puntaje_record);
 	else
-		return 0;
+		*puntaje_record = 0;
+	fclose(archivo);
 }
 
 void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
@@ -169,7 +160,7 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
 
 	seleccionar_nivel(campo, nivel);
-	*puntaje_record = seleccionar_puntaje_record(nivel, archivo);
+	leer_puntaje_record(nivel, archivo, puntaje_record);
 
 	crear_snake();
 	crear_comida();
@@ -202,17 +193,14 @@ void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
 	snake[0].x += snake[0].mod_x;
 	snake[0].y += snake[0].mod_y;
 
-	for(i = 0 ; i < tam ; i++) {
+	for(i = 0 ; i < tam ; i++)
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
-	}
 	campo[fruta.y][fruta.x] = '%';
 }
 
 void update(char campo[ALTO][ANCHO], int tam, int muerto) {
 	intro_campo(campo);
-	if(muerto == 0) {
-		intro_datos_nuevos(campo, tam);
-	}
+	if(muerto == 0) intro_datos_nuevos(campo, tam);
 }
 
 void asignar_movimiento(int mov_x, int mov_y) {
@@ -232,18 +220,13 @@ void exit_snake(void) {
 int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 	int tecla = 0;
 	if(*muerto == 0) {
-		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) {
-			*muerto = 1;
-		}
+		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
 	}
 
 	if(*muerto == 0) {
 		int i;
-		for(i = 1 ; i < tam && *muerto == 0 ; i++) {
-			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
-				*muerto = 1;
-			}
-		}
+		for(i = 1 ; i < tam && *muerto == 0 ; i++)
+			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) *muerto = 1;
 	}
 
 	if(*muerto == 0) {
@@ -263,22 +246,16 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 		if(keypressed()) {
 			tecla = readkey() >> 8;
 
-			if(tecla == KEY_P) {
-				readkey();
-			}
+			if(tecla == KEY_P) readkey();
 
-			if(tecla == KEY_DOWN && snake[0].mod_y != -1) {
-				asignar_movimiento(0, 1);
-			}
-			if(tecla == KEY_UP && snake[0].mod_y != 1) {
-				asignar_movimiento(0, -1);
-			}
-			if(tecla == KEY_LEFT && snake[0].mod_x != 1) {
-				asignar_movimiento(-1, 0);
-			}
-			if(tecla == KEY_RIGHT && snake[0].mod_x != -1) {
-				asignar_movimiento(1, 0);
-			}
+			int mov_x = 0, mov_y = 0;
+
+			if(tecla == KEY_DOWN && snake[0].mod_y != -1) mov_y = 1;
+			if(tecla == KEY_UP && snake[0].mod_y != 1) mov_y = -1;
+			if(tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
+			if(tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
+
+			asignar_movimiento(mov_x, mov_y);
 		}
 	}
 	else {
@@ -312,19 +289,14 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL);
 		tam = input(campo, tam, &muerto, puntaje_record);
-
 		update(campo, tam, muerto);
-
 		rest(pausa);
 	} while (muerto == 0);
 
 	int puntaje_actual = tam - 4;
 
 	archivo = fopen("puntaje_record.txt", "w");
-	if(puntaje_record <= puntaje_actual)
-		fprintf(archivo, "%d", puntaje_actual);
-	else
-		fprintf(archivo, "%d", puntaje_record);
+	(puntaje_record <= puntaje_actual) ? fprintf(archivo, "%d", puntaje_actual) : fprintf(archivo, "%d", puntaje_record);
 
 	fclose(archivo);
 }
