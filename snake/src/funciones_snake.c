@@ -13,6 +13,7 @@
 #define ESCALA 10
 #define TAMANIO_INICIAL 4
 #define TOTAL_FRUTAS 2556
+#define MAX_DIGITOS_PUNTAJE 4
 
 typedef struct {
 	int x,y;
@@ -147,13 +148,28 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	}
 }
 
-void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel) {
+int seleccionar_puntaje_record(int * nivel, FILE * archivo) {
+	if(archivo != NULL) {
+		char cadena[MAX_DIGITOS_PUNTAJE];
+		int i;
+		for(i = 0 ; i < *nivel ; i++) {
+			fgets(cadena, MAX_DIGITOS_PUNTAJE + 1, archivo);
+		}
+		fclose(archivo);
+		return atoi(cadena);
+	}
+	else
+		return 0;
+}
+
+void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
 	allegro_init();
 	install_keyboard();
 	install_timer();
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
 
 	seleccionar_nivel(campo, nivel);
+	*puntaje_record = seleccionar_puntaje_record(nivel, archivo);
 
 	crear_snake();
 	crear_comida();
@@ -281,7 +297,6 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
 	int muerto = 0, pausa = 0;
 
-
 	switch(*nivel) {
 		case 1 :
 			pausa = 300;
@@ -304,10 +319,12 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 	} while (muerto == 0);
 
 	int puntaje_actual = tam - 4;
+
 	archivo = fopen("puntaje_record.txt", "w");
 	if(puntaje_record <= puntaje_actual)
 		fprintf(archivo, "%d", puntaje_actual);
 	else
 		fprintf(archivo, "%d", puntaje_record);
+
 	fclose(archivo);
 }
