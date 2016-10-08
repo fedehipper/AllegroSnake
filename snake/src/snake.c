@@ -176,11 +176,22 @@ void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
 
 }
 
+void instalar_sonidos(void) {
+	int driver_digi = 1, driver_midi = 0;
+	detect_digi_driver(driver_digi);
+	detect_midi_driver(driver_midi);
+	reserve_voices(5, 5);
+	install_sound(driver_digi, driver_midi, "cfg_path");
+	set_volume(200, 100);
+}
+
 void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
 	allegro_init();
 	install_keyboard();
 	install_timer();
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
+
+	instalar_sonidos();
 
 	seleccionar_nivel(campo, nivel);
 	leer_puntaje_record(nivel, archivo, puntaje_record);
@@ -240,7 +251,18 @@ void exit_snake(void) {
 	}
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
+void pausa(int tecla, SAMPLE * sonido_pausa) {
+	play_sample(sonido_pausa, 200, 150, 1000, 0);
+	while(1) {
+		tecla = readkey() >> 8;
+		if(tecla == KEY_P) {
+			play_sample(sonido_pausa, 200, 150, 1000, 0);
+			break;
+		}
+	}
+}
+
+int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, SAMPLE * s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto) {
 	int tecla = 0;
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
@@ -252,8 +274,12 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) *muerto = 1;
 	}
 
+	if(*muerto) play_sample(s_impacto, 200, 150, 1000, 0);
+
 	if(*muerto == 0) {
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
+			play_sample(s_comer, 200, 150, 1000, 0);
+
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
@@ -269,9 +295,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record) {
 		if(keypressed()) {
 			tecla = readkey() >> 8;
 
-			if(tecla == KEY_P) {
-				readkey();
-			}
+			if(tecla == KEY_P) pausa(tecla, s_pausa);
 
 			int mov_x = 0, mov_y = 0;
 
@@ -311,9 +335,13 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 			break;
 	}
 
+	SAMPLE * sonido_comer = load_sample("comer.wav");
+	SAMPLE * sonido_pausa = load_sample("pause.wav");
+	SAMPLE * sonido_impacto = load_sample("impact.wav");
+
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL);
-		tam = input(campo, tam, &muerto, puntaje_record);
+		tam = input(campo, tam, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto);
 		update(campo, tam, muerto);
 		rest(pausa);
 	} while (muerto == 0);
