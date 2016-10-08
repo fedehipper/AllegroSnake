@@ -232,7 +232,7 @@ void exit_snake(void) {
 void pausa(int tecla, SAMPLE * sonido_pausa) {
 	play_sample(sonido_pausa, 200, 150, 1000, 0);
 	while(1) {
-		readkey();
+		tecla = readkey() >> 8;
 		if(tecla == KEY_P) {
 			play_sample(sonido_pausa, 200, 150, 1000, 0);
 			break;
