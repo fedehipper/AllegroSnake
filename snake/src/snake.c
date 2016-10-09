@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define ALTO 40
 #define ANCHO 64
@@ -36,6 +37,51 @@ tipo_snake fruta_bits =
 	{0,0,0,15,15,15,0,0,0},
     {0,0,0,15,15,15,0,0,0},
     {0,0,0,15,15,15,0,0,0}};
+
+tipo_snake cabeza_a_derecha =
+   {{15,15,15,15,15,15,15,15,15},
+    {15,15,15,15,15,0 ,0 ,15,15},
+	{15,15,15,15,15,0 ,0 ,0 ,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,0 ,0 ,0 ,15},
+	{15,15,15,15,15,0 ,0 ,15,15},
+    {15,15,15,15,15,15,15,15,15}};
+
+tipo_snake cabeza_a_izquierda =
+   {{15,15,15,15,15,15,15,15,15},
+    {15,15,0 ,0 ,15,15,15,15,15},
+	{15,0 ,0 ,0 ,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,0 ,0 ,0 ,15,15,15,15,15},
+	{15,15,0 ,0 ,15,15,15,15,15},
+    {15,15,15,15,15,15,15,15,15}};
+
+tipo_snake cabeza_arriba =
+   {{15,15,15,15,15,15,15,15,15},
+    {15,15,0 ,15,15,15,0 ,15,15},
+	{15,0 ,0 ,15,15,15,0 ,0 ,15},
+	{15,0 ,0 ,15,15,15,0 ,0 ,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+    {15,15,15,15,15,15,15,15,15}};
+
+tipo_snake cabeza_abajo =
+   {{15,15,15,15,15,15,15,15,15},
+    {15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,15,15,15,15,15,15,15,15},
+	{15,0 ,0 ,15,15,15,0 ,0 ,15},
+	{15,0 ,0 ,15,15,15,0 ,0 ,15},
+	{15,15,0 ,15,15,15,0 ,15,15},
+    {15,15,15,15,15,15,15,15,15}};
+
 typedef struct {
 	int x,y;
 	int mod_x, mod_y;
@@ -76,7 +122,7 @@ int llenar_espacios(char campo[ALTO][ANCHO]) {
 	return tamanio;
 }
 
-void crear_snake(void) {
+void crear_cuerpo(void) {
 	int i, j;
 	jugador = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(jugador);
@@ -96,20 +142,58 @@ void crear_comida(void) {
 	}
 }
 
-void dibujar_bordes(void) {
-	rect(screen, ESCALA, ESCALA, ANCHO * 10 - 10, ALTO * 10 - 10, palette_color[15]);
+void crear_cabeza(int tecla_dir) {
+	int i, j;
+	cabeza = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(cabeza);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for(j = 0 ; j < ESCALA ; j++) {
+			switch(tecla_dir) {
+				case KEY_UP: putpixel(cabeza, i, j, palette_color[cabeza_arriba[j][i]]);
+				break;
+				case KEY_DOWN: putpixel(cabeza, i, j, palette_color[cabeza_abajo[j][i]]);
+				break;
+				case KEY_RIGHT: putpixel(cabeza, i, j, palette_color[cabeza_a_derecha[j][i]]);
+				break;
+				case KEY_LEFT: putpixel(cabeza, i, j, palette_color[cabeza_a_izquierda[j][i]]);
+				break;
+			}
+		}
+	}
 }
 
-void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual) {
+void dibujar_bordes(int pos_ancho, int pos_alto) {
+	rect(screen, ESCALA, ESCALA, ANCHO * ESCALA - pos_ancho, ALTO * ESCALA - pos_alto, palette_color[15]);
+}
+
+bool direccion_vertical(int tecla, int tecla_anterior) {
+	return (tecla_anterior == KEY_UP || tecla_anterior == KEY_DOWN) && (tecla == KEY_RIGHT || tecla == KEY_LEFT);
+}
+
+bool direccion_horizontal(int tecla, int tecla_anterior) {
+	return (tecla_anterior == KEY_RIGHT || tecla_anterior == KEY_LEFT) && (tecla == KEY_UP || tecla == KEY_DOWN);
+}
+
+void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior) {
 	int i,j;
 	clear_bitmap(screen);
-	dibujar_bordes();
+	dibujar_bordes(10, 10);
 	for(i = 0 ; i < ALTO ; i++) {
 		for(j = 0 ; j < ANCHO ; j++) {
-			if(campo[i][j] != ' ' && campo[i][j] != '%')
+			if(campo[i][j] == 'X')
 				draw_sprite(screen, jugador, j * ESCALA, i * ESCALA);
-			if(campo[i][j] == '%')
+			if(campo[i][j] == 'Y') {
+
+				if(direccion_vertical(tecla, *tecla_anterior) || direccion_horizontal(tecla, *tecla_anterior)) {
+					crear_cabeza(tecla);
+					*tecla_anterior = tecla;
+				}
+
+				draw_sprite(screen, cabeza, j * ESCALA, i * ESCALA);
+			}
+			if(campo[i][j] == '%') {
 				draw_sprite(screen, comida, j * ESCALA, i * ESCALA);
+			}
 		}
 	}
 	textprintf_centre_ex(screen, font, 30, 2, 15, 0, "%d", puntaje_actual);
@@ -119,8 +203,9 @@ void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual) {
 void intro_campo(char campo[ALTO][ANCHO]) {
 	int i, j;
 	for(i = 0; i < ALTO; i++) {
-		for(j = 0; j < ANCHO; j++)
+		for(j = 0; j < ANCHO; j++) {
 			campo[i][j] = ' ';
+		}
 	}
 }
 
@@ -131,17 +216,17 @@ void intro_datos(char campo[ALTO][ANCHO], int tam) {
 		snake[i].y = snake[i - 1].y;
 		snake[i].imagen ='X';
 	}
-	snake[0].imagen = 'X';
+	snake[0].imagen = 'Y';
 
-	for(i = 0; i < tam ; i++) {
+	for(i = 0 ; i < tam ; i++) {
 		campo[snake[i].y][snake[i].x] = snake[i].imagen;
 	}
 	campo[fruta.y][fruta.x] = '%';
 }
 
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
-	while(1) {
-		dibujar_bordes();
+	while(true) {
+		dibujar_bordes(10, 10);
 		textprintf_justify_ex(screen, font, 30, 10, 20, 0, 15, 0, "SELECT LEVEL: ");
 		textprintf_justify_ex(screen, font, 30, 10, 40, 0, 15, 0, "1 EASY");
 		textprintf_justify_ex(screen, font, 30, 10, 60, 0, 15, 0, "2 MEDIUM");
@@ -173,7 +258,6 @@ void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
 	}
 	else
 		*puntaje_record = 0;
-
 }
 
 void instalar_sonidos(void) {
@@ -196,8 +280,9 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 	seleccionar_nivel(campo, nivel);
 	leer_puntaje_record(nivel, archivo, puntaje_record);
 
-	crear_snake();
+	crear_cuerpo();
 	crear_comida();
+	crear_cabeza(KEY_RIGHT);
 
 	snake[0].x = 32;
 	snake[0].y = 10;
@@ -245,7 +330,7 @@ void asignar_movimiento(int mov_x, int mov_y) {
 void exit_snake(void) {
 	int tecla = 0;
 	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
-	while(1) {
+	while(true) {
 		tecla = readkey() >> 8;
 		if(tecla == KEY_ENTER) break;
 	}
@@ -253,7 +338,7 @@ void exit_snake(void) {
 
 void pausa(int tecla, SAMPLE * sonido_pausa) {
 	play_sample(sonido_pausa, 200, 150, 1000, 0);
-	while(1) {
+	while(true) {
 		tecla = readkey() >> 8;
 		if(tecla == KEY_P) {
 			play_sample(sonido_pausa, 200, 150, 1000, 0);
@@ -262,8 +347,7 @@ void pausa(int tecla, SAMPLE * sonido_pausa) {
 	}
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, SAMPLE * s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto) {
-	int tecla = 0;
+int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto) {
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
 	}
@@ -293,16 +377,16 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, SAM
 
 	if(*muerto == 0) {
 		if(keypressed()) {
-			tecla = readkey() >> 8;
+			*tecla = readkey() >> 8;
 
-			if(tecla == KEY_P) pausa(tecla, s_pausa);
+			if(*tecla == KEY_P) pausa(*tecla, s_pausa);
 
 			int mov_x = 0, mov_y = 0;
 
-			if(tecla == KEY_DOWN && snake[0].mod_y != -1) mov_y = 1;
-			if(tecla == KEY_UP && snake[0].mod_y != 1) mov_y = -1;
-			if(tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
-			if(tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
+			if(*tecla == KEY_DOWN && snake[0].mod_y != -1) mov_y = 1;
+			if(*tecla == KEY_UP && snake[0].mod_y != 1) mov_y = -1;
+			if(*tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
+			if(*tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
 			if(mov_x != 0 || mov_y != 0)
 				asignar_movimiento(mov_x, mov_y);
 		}
@@ -313,7 +397,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, SAM
 		} else {
 			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
 			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
-			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", puntaje_record);
+			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", record);
 		}
 		exit_snake();
 	}
@@ -321,17 +405,17 @@ int input(char campo[ALTO][ANCHO], int tam, int *muerto, int puntaje_record, SAM
 }
 
 void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
-	int muerto = 0, pausa = 0;
+	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
 	switch(*nivel) {
 		case 1 :
 			pausa = 300;
 			break;
 		case 2 :
-			pausa = 200;
+			pausa = 150;
 			break;
 		case 3 :
-			pausa = 100;
+			pausa = 50;
 			break;
 	}
 
@@ -340,8 +424,8 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 	SAMPLE * sonido_impacto = load_sample("impact.wav");
 
 	do {
-		draw(campo, puntaje_record, tam - TAMANIO_INICIAL);
-		tam = input(campo, tam, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto);
+		draw(campo, puntaje_record, tam - TAMANIO_INICIAL, tecla, &tecla_anterior);
+		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto);
 		update(campo, tam, muerto);
 		rest(pausa);
 	} while (muerto == 0);
