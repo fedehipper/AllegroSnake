@@ -117,12 +117,9 @@ void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int t
 			if(campo[i][j] == 'X')
 				draw_sprite(screen, jugador, j * ESCALA, i * ESCALA);
 			if(campo[i][j] == 'Y') {
-
 				if(direccion_vertical(tecla, *tecla_anterior) || direccion_horizontal(tecla, *tecla_anterior)) {
 					crear_cabeza(tecla);
-					*tecla_anterior = tecla;
 				}
-
 				draw_sprite(screen, cabeza, j * ESCALA, i * ESCALA);
 			}
 			if(campo[i][j] == '%') {
@@ -281,7 +278,7 @@ void pausa(int tecla, SAMPLE * sonido_pausa) {
 	}
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto) {
+int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior) {
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
 	}
@@ -311,7 +308,11 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 
 	if(*muerto == 0) {
 		if(keypressed()) {
+
+			*tecla_anterior = *tecla;
+
 			*tecla = readkey() >> 8;
+			printf("%d\n", *tecla);
 
 			if(*tecla == KEY_P) pausa(*tecla, s_pausa);
 
@@ -359,7 +360,7 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL, tecla, &tecla_anterior);
-		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto);
+		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior);
 		update(campo, tam, muerto);
 		rest(pausa);
 	} while (muerto == 0);
