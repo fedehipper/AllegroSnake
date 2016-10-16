@@ -308,11 +308,8 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 
 	if(*muerto == 0) {
 		if(keypressed()) {
-
 			*tecla_anterior = *tecla;
-
 			*tecla = readkey() >> 8;
-			printf("%d\n", *tecla);
 
 			if(*tecla == KEY_P) pausa(*tecla, s_pausa);
 
