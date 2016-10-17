@@ -92,8 +92,6 @@ typedef struct {
 	int x,y;
 }frt;
 
-snk snake[LIMITE_SNAKE];
-
 frt fruta;
 
 BITMAP *comida, *jugador, *cabeza;
@@ -206,7 +204,7 @@ void intro_campo(char campo[ALTO][ANCHO]) {
 	}
 }
 
-void intro_datos(char campo[ALTO][ANCHO], int tam) {
+void intro_datos(char campo[ALTO][ANCHO], int tam, snk *snake) {
 	int i;
 	for(i = 1 ; i < tam ; i++) {
 		snake[i].x = snake[i - 1].x - 1;
@@ -266,7 +264,7 @@ void instalar_sonidos(void) {
 	set_volume(200, 100);
 }
 
-void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
+void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo, snk *snake) {
 	allegro_init();
 	install_keyboard();
 	install_timer();
@@ -296,10 +294,10 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 		snake[i].mod_y = 0;
 	}
 	intro_campo(campo);
-	intro_datos(campo, *tam);
+	intro_datos(campo, *tam, snake);
 }
 
-void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
+void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam, snk *snake) {
 	int i;
 	for(i = tam - 1 ; i > 0 ; i--) {
 		snake[i].x = snake[i-1].x;
@@ -314,12 +312,12 @@ void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
 	campo[fruta.y][fruta.x] = '%';
 }
 
-void update(char campo[ALTO][ANCHO], int tam, int muerto) {
+void update(char campo[ALTO][ANCHO], int tam, int muerto, snk *snake) {
 	intro_campo(campo);
-	if(muerto == 0) intro_datos_nuevos(campo, tam);
+	if(muerto == 0) intro_datos_nuevos(campo, tam, snake);
 }
 
-void asignar_movimiento(int mov_x, int mov_y) {
+void asignar_movimiento(int mov_x, int mov_y, snk *snake) {
 	snake[0].mod_x = mov_x;
 	snake[0].mod_y = mov_y;
 }
@@ -344,7 +342,7 @@ void pausa(int tecla, SAMPLE * sonido_pausa) {
 	}
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior) {
+int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior, snk *snake) {
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
 	}
@@ -374,7 +372,10 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 
 	if(*muerto == 0) {
 		if(keypressed()) {
-			*tecla_anterior = *tecla;
+
+			if(*tecla != KEY_P) {
+				*tecla_anterior = *tecla;
+			}
 			*tecla = readkey() >> 8;
 
 			if(*tecla == KEY_P) pausa(*tecla, s_pausa);
@@ -386,7 +387,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 			if(*tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
 			if(*tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
 			if(mov_x != 0 || mov_y != 0)
-				asignar_movimiento(mov_x, mov_y);
+				asignar_movimiento(mov_x, mov_y, snake);
 		}
 	}
 	else {
@@ -402,7 +403,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	return tam;
 }
 
-void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
+void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel, snk *snake) {
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
 	switch(*nivel) {
@@ -423,8 +424,8 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL, tecla, &tecla_anterior);
-		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior);
-		update(campo, tam, muerto);
+		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior, snake);
+		update(campo, tam, muerto, snake);
 		rest(pausa);
 	} while (muerto == 0);
 
@@ -442,11 +443,12 @@ int main(void) {
 	int puntaje_record;
 
 	FILE * archivo;
+	snk snake[LIMITE_SNAKE];
 	archivo = fopen("puntaje_record.txt", "r");
 
 	int nivel = 0;
-	inicio(&tam, campo, &nivel, &puntaje_record, archivo);
-	loop(campo, tam, puntaje_record, archivo, &nivel);
+	inicio(&tam, campo, &nivel, &puntaje_record, archivo, snake);
+	loop(campo, tam, puntaje_record, archivo, &nivel, snake);
 
 	allegro_exit();
 	return EXIT_SUCCESS;
