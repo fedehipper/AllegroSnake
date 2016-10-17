@@ -342,6 +342,10 @@ void pausa(int tecla, SAMPLE * sonido_pausa) {
 	}
 }
 
+bool es_tecla_de_direccion(int tecla) {
+	return tecla == KEY_UP || tecla == KEY_DOWN || tecla == KEY_RIGHT || tecla == KEY_LEFT;
+}
+
 int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior, snk *snake) {
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
@@ -373,7 +377,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	if(*muerto == 0) {
 		if(keypressed()) {
 
-			if(*tecla != KEY_P) {
+			if(es_tecla_de_direccion(*tecla)) {
 				*tecla_anterior = *tecla;
 			}
 			*tecla = readkey() >> 8;
@@ -407,14 +411,11 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
 	switch(*nivel) {
-		case 1 :
-			pausa = 300;
+		case 1 : pausa = 300;
 			break;
-		case 2 :
-			pausa = 150;
+		case 2 : pausa = 150;
 			break;
-		case 3 :
-			pausa = 50;
+		case 3 : pausa = 50;
 			break;
 	}
 
