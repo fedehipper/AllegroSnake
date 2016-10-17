@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdbool.h>
 
+#define FLECHA_COORDENADA_X 23
 #define ALTO 40
 #define ANCHO 64
 #define LIMITE_SNAKE 2560
@@ -37,6 +38,17 @@ tipo_snake fruta_bits =
 	{0,0,0,15,15,15,0,0,0},
     {0,0,0,15,15,15,0,0,0},
     {0,0,0,15,15,15,0,0,0}};
+
+tipo_snake flecha_seleccion =
+   {{0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 },
+	{0 ,0 ,0 ,0 ,0 ,15,0 ,0 ,0 },
+	{0 ,0 ,0 ,0 ,0 ,0 ,15,0 ,0 },
+	{0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,0 },
+    {15,15,15,15,15,15,15,15,15},
+    {0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,0 },
+    {0 ,0 ,0 ,0 ,0 ,0 ,15,0 ,0 },
+	{0 ,0 ,0 ,0 ,0 ,15,0 ,0 ,0 },
+    {0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 }};
 
 tipo_snake cabeza_a_derecha =
    {{15,15,15,15,15,15,15,15,15},
@@ -94,7 +106,7 @@ typedef struct {
 
 frt fruta;
 
-BITMAP *comida, *jugador, *cabeza;
+BITMAP *comida, *jugador, *cabeza, *selector;
 
 frt espacios_vacios[LIMITE_SNAKE];
 
@@ -219,32 +231,94 @@ void intro_datos(char campo[ALTO][ANCHO], int tam, snk *snake) {
 	campo[fruta.y][fruta.x] = '%';
 }
 
-void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
-	while(true) {
-		dibujar_bordes(10, 10);
-		textprintf_justify_ex(screen, font, 30, 10, 20, 0, 15, 0, "SELECT LEVEL: ");
-		textprintf_justify_ex(screen, font, 30, 10, 40, 0, 15, 0, "1 EASY");
-		textprintf_justify_ex(screen, font, 30, 10, 60, 0, 15, 0, "2 MEDIUM");
-		textprintf_justify_ex(screen, font, 30, 10, 80, 0, 15, 0, "3 PROFFESIONAL");
-		int tecla = 0;
-		if(keypressed()) {
-			tecla = readkey() >> 8;
-			switch (tecla) {
-				case KEY_1: case KEY_1_PAD: *nivel = 1;
-				break;
-				case KEY_2: case KEY_2_PAD: *nivel = 2;
-				break;
-				case KEY_3: case KEY_3_PAD: *nivel = 3;
-				break;
-				default:
-					textprintf_centre_ex(screen, font, 325, 190, 15, 0, "AGAIN SELECT A VALID LEVEL ...");
-					continue;
-				break;
-			}
-			break;
+void crear_selector(void){
+	int i, j;
+	selector = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(selector);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for(j = 0 ; j < ESCALA ; j++)
+			putpixel(selector, i, j, palette_color[flecha_seleccion[j][i]]);
+	}
+}
+
+void dibujar_titulo_gusano(void) {
+	textprintf_justify_ex(screen, font, 30, 10, 40, 0, 15, 0, " __________");
+	textprintf_justify_ex(screen, font, 30, 10, 50, 0, 15, 0, "/\\  ______ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 60, 0, 15, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
+	textprintf_justify_ex(screen, font, 30, 10, 70, 0, 15, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 80, 0, 15, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 90, 0, 15, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 100, 0, 15, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 110, 0, 15, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
+	textprintf_justify_ex(screen, font, 30, 10, 120, 0, 15, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+}
+
+void dibujar_niveles(void) {
+	textprintf_justify_ex(screen, font, 260, 10, 160, 0, 15, 0, "SELECT LEVEL: ");
+	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
+	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
+	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
+}
+
+
+void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y) {
+	int i;
+	clear_bitmap(screen);
+	dibujar_bordes(10, 10);
+	for(i = 18 ; i < FLECHA_COORDENADA_X ; i++) {
+		if(campo[23][y] == 'F') {
+			draw_sprite(screen, selector, FLECHA_COORDENADA_X * ESCALA, y * ESCALA);
 		}
 	}
 }
+
+void vaciar_flecha_selector(char campo[ALTO][ANCHO]) {
+	campo[FLECHA_COORDENADA_X][18] = ' ';
+	campo[FLECHA_COORDENADA_X][20] = ' ';
+	campo[FLECHA_COORDENADA_X][22] = ' ';
+}
+
+void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
+	crear_selector();
+	int tecla = 0, pos_nivel = 1, flecha_y = 18;
+	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
+
+	while(true) {
+		dibujar_bordes(ESCALA, ESCALA);
+		dibujar_niveles();
+		dibujar_titulo_gusano();
+
+		tecla = readkey() >> 8;
+
+		if(tecla == KEY_UP) pos_nivel--;
+		if(tecla == KEY_DOWN) pos_nivel++;
+		if(pos_nivel > 3) pos_nivel = 1;
+		if(pos_nivel < 1) pos_nivel = 3;
+
+		vaciar_flecha_selector(campo);
+		switch(pos_nivel) {
+			case 1: {
+				campo[23][18] = 'F';
+				flecha_y = 18;
+			}
+			break;
+			case 2:{
+				campo[23][20] = 'F';
+				flecha_y = 20;
+			}
+			break;
+			case 3: {
+				campo[23][22] = 'F';
+				flecha_y = 22;
+			}
+			break;
+		}
+		dibujar_flecha_selector(campo, flecha_y);
+		*nivel = pos_nivel;
+		if(tecla == KEY_ENTER) break;
+	}
+}
+
 
 void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
 	if(archivo != NULL) {
