@@ -225,22 +225,14 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 
 		vaciar_flecha_selector(campo);
 		switch(pos_nivel) {
-			case 1: {
-				campo[23][18] = 'F';
-				flecha_y = 18;
-			}
+			case 1: flecha_y = 18;
 			break;
-			case 2:{
-				campo[23][20] = 'F';
-				flecha_y = 20;
-			}
+			case 2: flecha_y = 20;
 			break;
-			case 3: {
-				campo[23][22] = 'F';
-				flecha_y = 22;
-			}
+			case 3: flecha_y = 22;
 			break;
 		}
+		campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
 		dibujar_flecha_selector(campo, flecha_y);
 		*nivel = pos_nivel;
 	}
