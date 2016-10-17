@@ -279,6 +279,7 @@ void vaciar_flecha_selector(char campo[ALTO][ANCHO]) {
 }
 
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
+	SAMPLE * sonido_flecha = load_sample("flecha.wav");
 	crear_selector();
 	int tecla = 0, pos_nivel = 1, flecha_y = 18;
 	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
@@ -289,6 +290,8 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 		dibujar_titulo_gusano();
 
 		tecla = readkey() >> 8;
+		if(tecla == KEY_ENTER) break;
+		play_sample(sonido_flecha, 200, 150, 1000, 0);
 
 		if(tecla == KEY_UP) pos_nivel--;
 		if(tecla == KEY_DOWN) pos_nivel++;
@@ -315,7 +318,6 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 		}
 		dibujar_flecha_selector(campo, flecha_y);
 		*nivel = pos_nivel;
-		if(tecla == KEY_ENTER) break;
 	}
 }
 
