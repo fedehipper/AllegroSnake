@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 #define FLECHA_COORDENADA_X 23
+#define RETRASO_ATENUAR_TITULO 50
 #define ALTO 40
 #define ANCHO 64
 #define LIMITE_SNAKE 2560
@@ -241,17 +242,18 @@ void crear_selector(void){
 	}
 }
 
-void dibujar_titulo_gusano(void) {
-	textprintf_justify_ex(screen, font, 30, 10, 40, 0, 15, 0, " __________");
-	textprintf_justify_ex(screen, font, 30, 10, 50, 0, 15, 0, "/\\  ______ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 60, 0, 15, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
-	textprintf_justify_ex(screen, font, 30, 10, 70, 0, 15, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 80, 0, 15, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 90, 0, 15, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 100, 0, 15, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 110, 0, 15, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
-	textprintf_justify_ex(screen, font, 30, 10, 120, 0, 15, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+void dibujar_titulo_gusano(int color) {
+	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, " __________");
+	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, "/\\  ______ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
+	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 110, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
+	textprintf_justify_ex(screen, font, 30, 10, 120, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
 }
+
 
 void dibujar_niveles(void) {
 	textprintf_justify_ex(screen, font, 260, 10, 160, 0, 15, 0, "SELECT LEVEL: ");
@@ -278,38 +280,50 @@ void vaciar_flecha_selector(char campo[ALTO][ANCHO]) {
 	campo[FLECHA_COORDENADA_X][22] = ' ';
 }
 
+void atenuar_colores_titulo(int *color, int *retraso) {
+	(*retraso)++;
+	rest(RETRASO_ATENUAR_TITULO);
+	if(*retraso > 10 && *retraso < 20) *color = 15;
+	if(*retraso < 10 && *retraso > 0) *color = 25;
+	if(*retraso > 20) *retraso = 0;
+}
+
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	SAMPLE * sonido_flecha = load_sample("flecha.wav");
+
 	crear_selector();
-	int tecla = 0, pos_nivel = 1, flecha_y = 18;
+	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 13, retraso = 0;
 	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
 
 	while(true) {
 		dibujar_bordes(ESCALA, ESCALA);
 		dibujar_niveles();
-		dibujar_titulo_gusano();
+		dibujar_titulo_gusano(color);
+		atenuar_colores_titulo(&color, &retraso);
 
-		tecla = readkey() >> 8;
-		if(tecla == KEY_ENTER) break;
-		play_sample(sonido_flecha, 200, 150, 1000, 0);
+		if(keypressed()) {
+			tecla = readkey() >> 8;
+			if(tecla == KEY_ENTER) break;
+			play_sample(sonido_flecha, 200, 150, 1000, 0);
 
-		if(tecla == KEY_UP) pos_nivel--;
-		if(tecla == KEY_DOWN) pos_nivel++;
-		if(pos_nivel > 3) pos_nivel = 1;
-		if(pos_nivel < 1) pos_nivel = 3;
+			if(tecla == KEY_UP) pos_nivel--;
+			if(tecla == KEY_DOWN) pos_nivel++;
+			if(pos_nivel > 3) pos_nivel = 1;
+			if(pos_nivel < 1) pos_nivel = 3;
 
-		vaciar_flecha_selector(campo);
-		switch(pos_nivel) {
-			case 1: flecha_y = 18;
-			break;
-			case 2: flecha_y = 20;
-			break;
-			case 3: flecha_y = 22;
-			break;
+			vaciar_flecha_selector(campo);
+			switch(pos_nivel) {
+				case 1: flecha_y = 18;
+				break;
+				case 2: flecha_y = 20;
+				break;
+				case 3: flecha_y = 22;
+				break;
+			}
+			campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
+			dibujar_flecha_selector(campo, flecha_y);
+			*nivel = pos_nivel;
 		}
-		campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
-		dibujar_flecha_selector(campo, flecha_y);
-		*nivel = pos_nivel;
 	}
 }
 
@@ -337,10 +351,9 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 	install_keyboard();
 	install_timer();
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
-
 	instalar_sonidos();
-
 	seleccionar_nivel(campo, nivel);
+
 	leer_puntaje_record(nivel, archivo, puntaje_record);
 
 	crear_cuerpo();
