@@ -6,8 +6,8 @@
 #include <time.h>
 #include <stdbool.h>
 
-#define FLECHA_COORDENADA_X 23
 #define RETRASO_ATENUAR_TITULO 50
+#define FLECHA_COORDENADA_X 23
 #define ALTO 40
 #define ANCHO 64
 #define LIMITE_SNAKE 2560
@@ -15,6 +15,10 @@
 #define TAMANIO_INICIAL 4
 #define TOTAL_FRUTAS 2556
 #define MAX_DIGITOS_PUNTAJE 4
+#define ALTO_CHAR 15
+#define ANCHO_CHAR 13
+#define POS_SELECT_LEVEL 150
+
 
 typedef int tipo_snake[10][10];
 
@@ -29,17 +33,6 @@ tipo_snake vivora =
 	{15,15,15,15,15,15,15,15,15},
     {15,15,15,15,15,15,15,15,15}};
 
-tipo_snake fruta_bits =
-   {{0,0,0,15,15,15,0,0,0},
-    {0,0,0,15,15,15,0,0,0},
-	{0,0,0,15,15,15,0,0,0},
-	{15,15,15,0,0,0,15,15,15},
-    {15,15,15,0,0,0,15,15,15},
-    {15,15,15,0,0,0,15,15,15},
-	{0,0,0,15,15,15,0,0,0},
-    {0,0,0,15,15,15,0,0,0},
-    {0,0,0,15,15,15,0,0,0}};
-
 tipo_snake flecha_seleccion =
    {{0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 },
 	{0 ,0 ,0 ,0 ,0 ,15,0 ,0 ,0 },
@@ -50,6 +43,17 @@ tipo_snake flecha_seleccion =
     {0 ,0 ,0 ,0 ,0 ,0 ,15,0 ,0 },
 	{0 ,0 ,0 ,0 ,0 ,15,0 ,0 ,0 },
     {0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 }};
+
+tipo_snake fruta_bits =
+   {{0 ,0 ,0 ,15,15,15, 0 ,0 ,0 },
+    {0 ,0 ,0 ,15,15,15, 0 ,0 ,0 },
+	{0 ,0 ,0 ,15,15,15, 0 ,0 ,0 },
+	{15,15,15, 0 ,0 ,0 ,15,15,15},
+    {15,15,15, 0, 0, 0, 15,15,15},
+    {15,15,15, 0, 0, 0, 15,15,15},
+	{0, 0, 0 ,15,15,15, 0, 0, 0 },
+    {0, 0 ,0 ,15,15,15, 0, 0, 0 },
+    {0 ,0 ,0 ,15,15,15, 0, 0, 0 }};
 
 tipo_snake cabeza_a_derecha =
    {{15,15,15,15,15,15,15,15,15},
@@ -95,6 +99,114 @@ tipo_snake cabeza_abajo =
 	{15,15,0 ,15,15,15,0 ,15,15},
     {15,15,15,15,15,15,15,15,15}};
 
+
+
+typedef int tipo_char[15][13];
+
+tipo_char t_caracter_s =
+		 {{0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,15,15 },
+		  {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 }};
+
+tipo_char t_caracter_e =
+		 {{15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0, 0 ,0 ,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0, 0 ,0 ,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0, 0 ,0 ,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15}};
+
+tipo_char t_caracter_l =
+		 {{15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15}};
+
+tipo_char t_caracter_c =
+		 {{15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15}};
+
+
+tipo_char t_caracter_v =
+		 {{15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {0 ,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,0 },
+		  {0 ,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,0 },
+		  {0 ,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,0 },
+		  {0 ,0 ,15,15,15,0 ,0 ,0 ,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,0 ,0 ,0 ,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,0 ,0 ,0 ,15,15,15,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,0 ,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,0 ,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,0 ,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,15,15,15,15,15,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,15,15,15,15,15,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,15,15,15,15,15,0 ,0 ,0 ,0 }};
+
+
+tipo_char t_caracter_t =
+		 {{15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 }};
+
 typedef struct {
 	int x,y;
 	int mod_x, mod_y;
@@ -105,9 +217,11 @@ typedef struct {
 	int x,y;
 }frt;
 
+snk snake[LIMITE_SNAKE];
+
 frt fruta;
 
-BITMAP *comida, *jugador, *cabeza, *selector;
+BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
 
 frt espacios_vacios[LIMITE_SNAKE];
 
@@ -140,6 +254,38 @@ void crear_cuerpo(void) {
 	for(i = 0 ; i < ESCALA ; i++) {
 		for (j = 0 ; j < ESCALA ; j++)
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
+	}
+}
+
+void crear_caracter(char tecla_caracter) {
+	int i, j;
+	caracter = create_bitmap(ANCHO_CHAR, ALTO_CHAR);
+	clear_bitmap(caracter);
+	for(i = 0 ; i < ANCHO_CHAR ; i++) {
+		for (j = 0 ; j < ALTO_CHAR ; j++)
+			switch(tecla_caracter) {
+				case 's': putpixel(caracter, i, j, palette_color[t_caracter_s[j][i]]);
+				break;
+				case 'e': putpixel(caracter, i, j, palette_color[t_caracter_e[j][i]]);
+				break;
+				case 'l': putpixel(caracter, i, j, palette_color[t_caracter_l[j][i]]);
+				break;
+				case 'c': putpixel(caracter, i, j, palette_color[t_caracter_c[j][i]]);
+				break;
+				case 't': putpixel(caracter, i, j, palette_color[t_caracter_t[j][i]]);
+				break;
+				case 'v': putpixel(caracter, i, j, palette_color[t_caracter_v[j][i]]);
+			}
+	}
+}
+
+void crear_selector(void){
+	int i, j;
+	selector = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(selector);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for(j = 0 ; j < ESCALA ; j++)
+			putpixel(selector, i, j, palette_color[flecha_seleccion[j][i]]);
 	}
 }
 
@@ -217,7 +363,7 @@ void intro_campo(char campo[ALTO][ANCHO]) {
 	}
 }
 
-void intro_datos(char campo[ALTO][ANCHO], int tam, snk *snake) {
+void intro_datos(char campo[ALTO][ANCHO], int tam) {
 	int i;
 	for(i = 1 ; i < tam ; i++) {
 		snake[i].x = snake[i - 1].x - 1;
@@ -232,16 +378,6 @@ void intro_datos(char campo[ALTO][ANCHO], int tam, snk *snake) {
 	campo[fruta.y][fruta.x] = '%';
 }
 
-void crear_selector(void){
-	int i, j;
-	selector = create_bitmap(ESCALA, ESCALA);
-	clear_bitmap(selector);
-	for(i = 0 ; i < ESCALA ; i++) {
-		for(j = 0 ; j < ESCALA ; j++)
-			putpixel(selector, i, j, palette_color[flecha_seleccion[j][i]]);
-	}
-}
-
 void dibujar_titulo_gusano(int color) {
 	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, " __________");
 	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, "/\\  ______ \\");
@@ -254,9 +390,24 @@ void dibujar_titulo_gusano(int color) {
 	textprintf_justify_ex(screen, font, 30, 10, 120, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
 }
 
-
 void dibujar_niveles(void) {
-	textprintf_justify_ex(screen, font, 260, 10, 160, 0, 15, 0, "SELECT LEVEL: ");
+	int espacio_char = 250;
+	int i = 0;
+	char * seleccion = "select";
+	char * nivel = "level";
+
+	for(i = 0 ; i < strlen(seleccion) ; i++) {
+		crear_caracter(seleccion[i]);
+		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
+		espacio_char += ANCHO_CHAR + 1;
+	}
+	espacio_char += ANCHO_CHAR;
+	for(i = 0 ; i < strlen(nivel) ; i++) {
+		crear_caracter(nivel[i]);
+		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
+		espacio_char += ANCHO_CHAR + 1;
+	}
+
 	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
 	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
 	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
@@ -289,8 +440,8 @@ void atenuar_colores_titulo(int *color, int *retraso) {
 }
 
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
-	SAMPLE * sonido_flecha = load_sample("flecha.wav");
-
+	SAMPLE * sonido_flecha;
+	sonido_flecha = load_sample("s_flecha.wav");
 	crear_selector();
 	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 15, retraso = 0;
 	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
@@ -302,9 +453,10 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 		atenuar_colores_titulo(&color, &retraso);
 
 		if(keypressed()) {
-			*nivel = pos_nivel;
 			tecla = readkey() >> 8;
+			*nivel = pos_nivel;
 			if(tecla == KEY_ENTER) break;
+
 			play_sample(sonido_flecha, 200, 150, 1000, 0);
 
 			if(tecla == KEY_UP) pos_nivel--;
@@ -327,7 +479,6 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	}
 }
 
-
 void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
 	if(archivo != NULL) {
 		fscanf(archivo, "%d", puntaje_record);
@@ -346,14 +497,18 @@ void instalar_sonidos(void) {
 	set_volume(200, 100);
 }
 
-void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo, snk *snake) {
+void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
 	allegro_init();
 	install_keyboard();
+	install_mouse();
 	install_timer();
-	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
-	instalar_sonidos();
-	seleccionar_nivel(campo, nivel);
 
+	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
+	show_mouse(screen);
+
+	instalar_sonidos();
+
+	seleccionar_nivel(campo, nivel);
 	leer_puntaje_record(nivel, archivo, puntaje_record);
 
 	crear_cuerpo();
@@ -375,10 +530,10 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 		snake[i].mod_y = 0;
 	}
 	intro_campo(campo);
-	intro_datos(campo, *tam, snake);
+	intro_datos(campo, *tam);
 }
 
-void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam, snk *snake) {
+void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam) {
 	int i;
 	for(i = tam - 1 ; i > 0 ; i--) {
 		snake[i].x = snake[i-1].x;
@@ -393,12 +548,12 @@ void intro_datos_nuevos(char campo[ALTO][ANCHO], int tam, snk *snake) {
 	campo[fruta.y][fruta.x] = '%';
 }
 
-void update(char campo[ALTO][ANCHO], int tam, int muerto, snk *snake) {
+void update(char campo[ALTO][ANCHO], int tam, int muerto) {
 	intro_campo(campo);
-	if(muerto == 0) intro_datos_nuevos(campo, tam, snake);
+	if(muerto == 0) intro_datos_nuevos(campo, tam);
 }
 
-void asignar_movimiento(int mov_x, int mov_y, snk *snake) {
+void asignar_movimiento(int mov_x, int mov_y) {
 	snake[0].mod_x = mov_x;
 	snake[0].mod_y = mov_y;
 }
@@ -427,7 +582,7 @@ bool es_tecla_de_direccion(int tecla) {
 	return tecla == KEY_UP || tecla == KEY_DOWN || tecla == KEY_RIGHT || tecla == KEY_LEFT;
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior, snk *snake) {
+int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior) {
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
 	}
@@ -461,6 +616,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 			if(es_tecla_de_direccion(*tecla)) {
 				*tecla_anterior = *tecla;
 			}
+
 			*tecla = readkey() >> 8;
 
 			if(*tecla == KEY_P) pausa(*tecla, s_pausa);
@@ -472,7 +628,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 			if(*tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
 			if(*tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
 			if(mov_x != 0 || mov_y != 0)
-				asignar_movimiento(mov_x, mov_y, snake);
+				asignar_movimiento(mov_x, mov_y);
 		}
 	}
 	else {
@@ -488,16 +644,16 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	return tam;
 }
 
-void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel, snk *snake) {
+void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
 	switch(*nivel) {
 		case 1 : pausa = 300;
-			break;
+		break;
 		case 2 : pausa = 150;
-			break;
+		break;
 		case 3 : pausa = 50;
-			break;
+		break;
 	}
 
 	SAMPLE * sonido_comer = load_sample("comer.wav");
@@ -506,8 +662,8 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 
 	do {
 		draw(campo, puntaje_record, tam - TAMANIO_INICIAL, tecla, &tecla_anterior);
-		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior, snake);
-		update(campo, tam, muerto, snake);
+		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior);
+		update(campo, tam, muerto);
 		rest(pausa);
 	} while (muerto == 0);
 
@@ -525,12 +681,11 @@ int main(void) {
 	int puntaje_record;
 
 	FILE * archivo;
-	snk snake[LIMITE_SNAKE];
 	archivo = fopen("puntaje_record.txt", "r");
 
 	int nivel = 0;
-	inicio(&tam, campo, &nivel, &puntaje_record, archivo, snake);
-	loop(campo, tam, puntaje_record, archivo, &nivel, snake);
+	inicio(&tam, campo, &nivel, &puntaje_record, archivo);
+	loop(campo, tam, puntaje_record, archivo, &nivel);
 
 	allegro_exit();
 	return EXIT_SUCCESS;
