@@ -292,7 +292,7 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	SAMPLE * sonido_flecha = load_sample("flecha.wav");
 
 	crear_selector();
-	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 13, retraso = 0;
+	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 15, retraso = 0;
 	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
 
 	while(true) {
@@ -302,6 +302,7 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 		atenuar_colores_titulo(&color, &retraso);
 
 		if(keypressed()) {
+			*nivel = pos_nivel;
 			tecla = readkey() >> 8;
 			if(tecla == KEY_ENTER) break;
 			play_sample(sonido_flecha, 200, 150, 1000, 0);
@@ -322,7 +323,6 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 			}
 			campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
 			dibujar_flecha_selector(campo, flecha_y);
-			*nivel = pos_nivel;
 		}
 	}
 }
