@@ -17,6 +17,9 @@
 #define TAMANIO_INICIAL 4
 #define TOTAL_FRUTAS 2556
 #define MAX_DIGITOS_PUNTAJE 4
+#define ALTO_CHAR 15
+#define ANCHO_CHAR 13
+#define POS_SELECT_LEVEL 150
 
 typedef struct {
 	int x,y;
@@ -32,7 +35,7 @@ snk snake[LIMITE_SNAKE];
 
 frt fruta;
 
-BITMAP *comida, *jugador, *cabeza, *selector;
+BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
 
 frt espacios_vacios[LIMITE_SNAKE];
 
@@ -65,6 +68,28 @@ void crear_cuerpo(void) {
 	for(i = 0 ; i < ESCALA ; i++) {
 		for (j = 0 ; j < ESCALA ; j++)
 			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
+	}
+}
+
+void crear_caracter(char tecla_caracter) {
+	int i, j;
+	caracter = create_bitmap(ANCHO_CHAR, ALTO_CHAR);
+	clear_bitmap(caracter);
+	for(i = 0 ; i < ANCHO_CHAR ; i++) {
+		for (j = 0 ; j < ALTO_CHAR ; j++)
+			switch(tecla_caracter) {
+				case 's': putpixel(caracter, i, j, palette_color[t_caracter_s[j][i]]);
+				break;
+				case 'e': putpixel(caracter, i, j, palette_color[t_caracter_e[j][i]]);
+				break;
+				case 'l': putpixel(caracter, i, j, palette_color[t_caracter_l[j][i]]);
+				break;
+				case 'c': putpixel(caracter, i, j, palette_color[t_caracter_c[j][i]]);
+				break;
+				case 't': putpixel(caracter, i, j, palette_color[t_caracter_t[j][i]]);
+				break;
+				case 'v': putpixel(caracter, i, j, palette_color[t_caracter_v[j][i]]);
+			}
 	}
 }
 
@@ -180,7 +205,23 @@ void dibujar_titulo_gusano(int color) {
 }
 
 void dibujar_niveles(void) {
-	textprintf_justify_ex(screen, font, 260, 10, 160, 0, 15, 0, "SELECT LEVEL: ");
+	int espacio_char = 250;
+	int i = 0;
+	char * seleccion = "select";
+	char * nivel = "level";
+
+	for(i = 0 ; i < strlen(seleccion) ; i++) {
+		crear_caracter(seleccion[i]);
+		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
+		espacio_char += ANCHO_CHAR + 1;
+	}
+	espacio_char += ANCHO_CHAR;
+	for(i = 0 ; i < strlen(nivel) ; i++) {
+		crear_caracter(nivel[i]);
+		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
+		espacio_char += ANCHO_CHAR + 1;
+	}
+
 	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
 	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
 	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
