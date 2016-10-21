@@ -1,0 +1,227 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <allegro.h>
+#include <stdbool.h>
+#include "bits.h"
+
+#define ESCALA 10
+#define ALTO_CHAR 15
+#define ANCHO_CHAR 13
+#define ALTO 40
+#define ANCHO 64
+#define FLECHA_COORDENADA_X 23
+#define POS_SELECT_LEVEL 150
+#define RETRASO_ATENUAR_TITULO 50
+
+BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
+
+bool direccion_vertical(int tecla, int tecla_anterior) {
+	return (tecla_anterior == KEY_UP || tecla_anterior == KEY_DOWN) && (tecla == KEY_RIGHT || tecla == KEY_LEFT);
+}
+
+bool direccion_horizontal(int tecla, int tecla_anterior) {
+	return (tecla_anterior == KEY_RIGHT || tecla_anterior == KEY_LEFT) && (tecla == KEY_UP || tecla == KEY_DOWN);
+}
+
+void crear_cuerpo(void) {
+	int i, j;
+	jugador = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(jugador);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for (j = 0 ; j < ESCALA ; j++)
+			putpixel(jugador, i, j, palette_color[vivora[j][i]]);
+	}
+}
+
+void crear_caracter(char tecla_caracter) {
+	int i, j;
+	caracter = create_bitmap(ANCHO_CHAR, ALTO_CHAR);
+	clear_bitmap(caracter);
+	for(i = 0 ; i < ANCHO_CHAR ; i++) {
+		for (j = 0 ; j < ALTO_CHAR ; j++)
+			switch(tecla_caracter) {
+				case 's': putpixel(caracter, i, j, palette_color[t_caracter_s[j][i]]);
+				break;
+				case 'e': putpixel(caracter, i, j, palette_color[t_caracter_e[j][i]]);
+				break;
+				case 'l': putpixel(caracter, i, j, palette_color[t_caracter_l[j][i]]);
+				break;
+				case 'c': putpixel(caracter, i, j, palette_color[t_caracter_c[j][i]]);
+				break;
+				case 't': putpixel(caracter, i, j, palette_color[t_caracter_t[j][i]]);
+				break;
+				case 'v': putpixel(caracter, i, j, palette_color[t_caracter_v[j][i]]);
+			}
+	}
+}
+
+void crear_selector(void) {
+	int i, j;
+	selector = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(selector);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for(j = 0 ; j < ESCALA ; j++)
+			putpixel(selector, i, j, palette_color[flecha_seleccion[j][i]]);
+	}
+}
+
+void crear_comida(void) {
+	int i, j;
+	comida = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(comida);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for (j = 0 ; j < ESCALA ; j++)
+			putpixel(comida, i, j, palette_color[fruta_bits[j][i]]);
+	}
+}
+
+void crear_cabeza(int tecla_dir) {
+	int i, j;
+	cabeza = create_bitmap(ESCALA, ESCALA);
+	clear_bitmap(cabeza);
+	for(i = 0 ; i < ESCALA ; i++) {
+		for(j = 0 ; j < ESCALA ; j++) {
+			switch(tecla_dir) {
+				case KEY_UP: putpixel(cabeza, i, j, palette_color[cabeza_arriba[j][i]]);
+				break;
+				case KEY_DOWN: putpixel(cabeza, i, j, palette_color[cabeza_abajo[j][i]]);
+				break;
+				case KEY_RIGHT: putpixel(cabeza, i, j, palette_color[cabeza_a_derecha[j][i]]);
+				break;
+				case KEY_LEFT: putpixel(cabeza, i, j, palette_color[cabeza_a_izquierda[j][i]]);
+				break;
+			}
+		}
+	}
+}
+
+void dibujar_bordes(int pos_ancho, int pos_alto) {
+	rect(screen, ESCALA, ESCALA, ANCHO * ESCALA - pos_ancho, ALTO * ESCALA - pos_alto, palette_color[15]);
+}
+
+
+void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior) {
+	int i,j;
+	clear_bitmap(screen);
+	dibujar_bordes(10, 10);
+	for(i = 0 ; i < ALTO ; i++) {
+		for(j = 0 ; j < ANCHO ; j++) {
+			if(campo[i][j] == 'X')
+				draw_sprite(screen, jugador, j * ESCALA, i * ESCALA);
+			if(campo[i][j] == 'Y') {
+				if(direccion_vertical(tecla, *tecla_anterior) || direccion_horizontal(tecla, *tecla_anterior)) {
+					crear_cabeza(tecla);
+				}
+				draw_sprite(screen, cabeza, j * ESCALA, i * ESCALA);
+			}
+			if(campo[i][j] == '%') {
+				draw_sprite(screen, comida, j * ESCALA, i * ESCALA);
+			}
+		}
+	}
+	textprintf_centre_ex(screen, font, 30, 2, 15, 0, "%d", puntaje_actual);
+	textprintf_centre_ex(screen, font, 610, 2, 15, 0, "%d", puntaje_record);
+}
+
+void dibujar_titulo_gusano(int color) {
+	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, " __________");
+	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, "/\\  ______ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
+	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 110, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
+	textprintf_justify_ex(screen, font, 30, 10, 120, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+}
+
+void dibujar_niveles(void) {
+	int espacio_char = 250;
+	int i = 0;
+	char * seleccion = "select";
+	char * nivel = "level";
+
+	for(i = 0 ; i < strlen(seleccion) ; i++) {
+		crear_caracter(seleccion[i]);
+		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
+		espacio_char += ANCHO_CHAR + 1;
+	}
+	espacio_char += ANCHO_CHAR;
+	for(i = 0 ; i < strlen(nivel) ; i++) {
+		crear_caracter(nivel[i]);
+		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
+		espacio_char += ANCHO_CHAR + 1;
+	}
+
+	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
+	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
+	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
+}
+
+
+void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y) {
+	int i;
+	clear_bitmap(screen);
+	dibujar_bordes(10, 10);
+	for(i = 18 ; i < FLECHA_COORDENADA_X ; i++) {
+		if(campo[23][y] == 'F') {
+			draw_sprite(screen, selector, FLECHA_COORDENADA_X * ESCALA, y * ESCALA);
+		}
+	}
+}
+
+void vaciar_flecha_selector(char campo[ALTO][ANCHO]) {
+	campo[FLECHA_COORDENADA_X][18] = ' ';
+	campo[FLECHA_COORDENADA_X][20] = ' ';
+	campo[FLECHA_COORDENADA_X][22] = ' ';
+}
+
+void atenuar_colores_titulo(int *color, int *retraso) {
+	(*retraso)++;
+	rest(RETRASO_ATENUAR_TITULO);
+	if(*retraso > 10 && *retraso < 20) *color = 15;
+	if(*retraso < 10 && *retraso > 0) *color = 25;
+	if(*retraso > 20) *retraso = 0;
+}
+
+void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
+	SAMPLE * sonido_flecha;
+	sonido_flecha = load_sample("s_flecha.wav");
+	crear_selector();
+	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 15, retraso = 0;
+	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
+
+	while(true) {
+		dibujar_bordes(ESCALA, ESCALA);
+		dibujar_niveles();
+		dibujar_titulo_gusano(color);
+		atenuar_colores_titulo(&color, &retraso);
+
+		if(keypressed()) {
+			tecla = readkey() >> 8;
+			*nivel = pos_nivel;
+			if(tecla == KEY_ENTER) break;
+
+			play_sample(sonido_flecha, 200, 150, 1000, 0);
+
+			if(tecla == KEY_UP) pos_nivel--;
+			if(tecla == KEY_DOWN) pos_nivel++;
+			if(pos_nivel > 3) pos_nivel = 1;
+			if(pos_nivel < 1) pos_nivel = 3;
+
+			vaciar_flecha_selector(campo);
+			switch(pos_nivel) {
+				case 1: flecha_y = 18;
+				break;
+				case 2: flecha_y = 20;
+				break;
+				case 3: flecha_y = 22;
+				break;
+			}
+			campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
+			dibujar_flecha_selector(campo, flecha_y);
+		}
+	}
+}
+
