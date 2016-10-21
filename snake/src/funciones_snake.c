@@ -112,14 +112,14 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 	leer_puntaje_record(nivel, archivo, puntaje_record);
 
 	crear_cuerpo();
-	crear_comida();
+	srand(time(NULL));
+	crear_comida(rand() % 5 + 1);
 	crear_cabeza(KEY_RIGHT);
 
 	snake[0].x = 32;
 	snake[0].y = 10;
 
 	*tam = TAMANIO_INICIAL;
-	srand(time(NULL));
 
 	fruta.x = rand() % (ANCHO - 2) + 1;
 	fruta.y = rand() % (ALTO - 2) + 1;
@@ -198,6 +198,8 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	if(*muerto == 0) {
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
 			play_sample(s_comer, 200, 150, 1000, 0);
+
+			crear_comida(rand() % 5 + 1);
 
 			tam += 1;
 			snake[tam - 1].imagen = 'X';

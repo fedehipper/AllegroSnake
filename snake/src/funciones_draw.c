@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <allegro.h>
+#include <time.h>
 #include <stdbool.h>
 #include "bits.h"
 
@@ -90,13 +91,26 @@ void crear_selector(void) {
 	}
 }
 
-void crear_comida(void) {
+void crear_comida(int numero_fruta_random) {
 	int i, j;
 	comida = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(comida);
+
 	for(i = 0 ; i < ESCALA ; i++) {
-		for (j = 0 ; j < ESCALA ; j++)
-			putpixel(comida, i, j, palette_color[fruta_bits[j][i]]);
+		for (j = 0 ; j < ESCALA ; j++) {
+			switch(numero_fruta_random) {
+				case 1: putpixel(comida, i, j, palette_color[fruta_uno[j][i]]);
+				break;
+				case 2: putpixel(comida, i, j, palette_color[fruta_dos[j][i]]);
+				break;
+				case 3: putpixel(comida, i, j, palette_color[fruta_tres[j][i]]);
+				break;
+				case 4: putpixel(comida, i, j, palette_color[fruta_cuatro[j][i]]);
+				break;
+				case 5: putpixel(comida, i, j, palette_color[fruta_cinco[j][i]]);
+				break;
+			}
+		}
 	}
 }
 

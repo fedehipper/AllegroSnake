@@ -6,7 +6,7 @@
 void crear_cuerpo(void);
 void crear_caracter(char tecla_caracter);
 void crear_selector(void);
-void crear_comida(void);
+void crear_comida(int numero_fruta_ramdom);
 void crear_cabeza(int tecla_dir);
 void dibujar_bordes(int pos_ancho, int pos_alto);
 void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior);
