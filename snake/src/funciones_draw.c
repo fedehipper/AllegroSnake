@@ -109,6 +109,8 @@ void crear_comida(int numero_fruta_random) {
 				break;
 				case 5: putpixel(comida, i, j, palette_color[fruta_cinco[j][i]]);
 				break;
+				case 6: putpixel(comida, i, j, palette_color[fruta_seis[j][i]]);
+				break;
 			}
 		}
 	}

@@ -9,6 +9,7 @@
 #include "funciones_draw.h"
 
 
+#define CANTIDAD_FRUTAS 6
 #define LIMITE_SNAKE 2560
 #define ESCALA 10
 #define TAMANIO_INICIAL 4
@@ -113,7 +114,7 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 
 	crear_cuerpo();
 	srand(time(NULL));
-	crear_comida(rand() % 5 + 1);
+	crear_comida(rand() % CANTIDAD_FRUTAS + 1);
 	crear_cabeza(KEY_RIGHT);
 
 	snake[0].x = 32;
@@ -199,7 +200,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
 			play_sample(s_comer, 200, 150, 1000, 0);
 
-			crear_comida(rand() % 5 + 1);
+			crear_comida(rand() % CANTIDAD_FRUTAS + 1);
 
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
@@ -243,17 +244,22 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	return tam;
 }
 
+void asignar_pausa(int *pausa, int nivel) {
+	switch(nivel) {
+		case 1 : *pausa = 300;
+		break;
+		case 2 : *pausa = 150;
+		break;
+		case 3 : *pausa = 50;
+		break;
+	}
+}
+
+
 void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
-	switch(*nivel) {
-		case 1 : pausa = 300;
-		break;
-		case 2 : pausa = 150;
-		break;
-		case 3 : pausa = 50;
-		break;
-	}
+	asignar_pausa(&pausa, *nivel);
 
 	SAMPLE * sonido_comer = load_sample("comer.wav");
 	SAMPLE * sonido_pausa = load_sample("pause.wav");
