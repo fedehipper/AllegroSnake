@@ -6,18 +6,21 @@
 #include <time.h>
 #include <stdbool.h>
 
-#define RETRASO_ATENUAR_TITULO 50
-#define FLECHA_COORDENADA_X 23
+#define ESCALA 10
+#define ALTO_CHAR 15
+#define ANCHO_CHAR 13
 #define ALTO 40
 #define ANCHO 64
+#define FLECHA_COORDENADA_X 23
+#define POS_SELECT_LEVEL 140
+#define RETRASO_ATENUAR_TITULO 50
 #define LIMITE_SNAKE 2560
 #define ESCALA 10
 #define TAMANIO_INICIAL 4
 #define TOTAL_FRUTAS 2556
 #define MAX_DIGITOS_PUNTAJE 4
-#define ALTO_CHAR 15
-#define ANCHO_CHAR 13
-#define POS_SELECT_LEVEL 150
+#define FLECHA_COORDENADA_X 23
+
 
 
 typedef int tipo_snake[10][10];
@@ -44,7 +47,19 @@ tipo_snake flecha_seleccion =
 	{0 ,0 ,0 ,0 ,0 ,15,0 ,0 ,0 },
     {0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 }};
 
-tipo_snake fruta_bits =
+tipo_snake fruta_uno =
+   {{0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 },
+	{0 ,0 ,0 ,15,0 ,15,0 ,0 ,0 },
+	{0 ,0 ,15,0 ,0 ,0 ,15,0 ,0 },
+	{0 ,15,0 ,15,0 ,15,0 ,15,0 },
+    {15,0 ,0 ,0 ,15,0 ,0 ,0 ,15},
+    {0 ,15,0 ,15,0 ,15,0 ,15,0 },
+    {0 ,0 ,15,0 ,0 ,0 ,15,0 ,0 },
+	{0 ,0 ,0 ,15,0 ,15,0 ,0 ,0 },
+    {0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 }};
+
+
+tipo_snake fruta_dos =
    {{0 ,0 ,0 ,15,15,15, 0 ,0 ,0 },
     {0 ,0 ,0 ,15,15,15, 0 ,0 ,0 },
 	{0 ,0 ,0 ,15,15,15, 0 ,0 ,0 },
@@ -54,6 +69,39 @@ tipo_snake fruta_bits =
 	{0, 0, 0 ,15,15,15, 0, 0, 0 },
     {0, 0 ,0 ,15,15,15, 0, 0, 0 },
     {0 ,0 ,0 ,15,15,15, 0, 0, 0 }};
+
+tipo_snake fruta_tres =
+   {{0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+	{0 ,0 ,15,15,15,15,15,0 ,0 },
+	{0 ,15,15,0 ,15,0 ,15,15,0 },
+	{15,15,0 ,0 ,0 ,0 ,0 ,15,15},
+	{15,15,15,0 ,0 ,0 ,15,15,15},
+    {15,15,0 ,0 ,0 ,0 ,0 ,15,15},
+    {0 ,15,15,0 ,15,0 ,15,15,0 },
+	{0 ,0 ,15,15,15,15,15,0 ,0 },
+    {0 ,0 ,0 ,15,15,15,0 ,0 ,0 }};
+
+tipo_snake fruta_cuatro =
+   {{0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+	{0 ,0 ,15,15,15,15,15,0 ,0 },
+	{0 ,15,0 ,0 ,15,0 ,0 ,15,0 },
+	{15,15,0 ,15,15,15,0 ,15,15},
+	{15,15,15,15,15,15,15,15,15},
+    {15,15,0 ,15,15,15,0 ,15,15},
+    {0 ,15,0 ,0 ,15,0 ,0 ,15,0 },
+	{0 ,0 ,15,15,15,15,15,0 ,0 },
+    {0 ,0 ,0 ,15,15,15,0 ,0 ,0 }};
+
+tipo_snake fruta_cinco =
+   {{0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 },
+	{0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+	{0 ,0 ,15,15,15,15,15,0 ,0 },
+	{0 ,15,15,15,15,15,15,15,0 },
+	{15,15,15,15,15,15,15,15,15},
+    {0 ,15,15,15,15,15,15,15,0 },
+	{0 ,0 ,15,15,15,15,15,0 ,0 },
+	{0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+    {0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 }};
 
 tipo_snake cabeza_a_derecha =
    {{15,15,15,15,15,15,15,15,15},
@@ -105,19 +153,19 @@ typedef int tipo_char[15][13];
 
 tipo_char t_caracter_s =
 		 {{0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
-		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
 		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
 		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
 		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
 		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
 		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
-		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
 		  {0 ,0 ,15,15,15,15,15,15,15,15,15,15,15 },
 		  {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
 		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
 		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
 		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
-		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
 		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 }};
 
 tipo_char t_caracter_e =
@@ -155,21 +203,21 @@ tipo_char t_caracter_l =
 		  {15,15,15,15,15,15,15,15,15,15,15,15,15}};
 
 tipo_char t_caracter_c =
-		 {{15,15,15,15,15,15,15,15,15,15,15,15,15},
+		 {{0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
 		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
 		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0 },
-		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
-		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
-		  {15,15,15,15,15,15,15,15,15,15,15,15,15}};
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 }};
 
 
 tipo_char t_caracter_v =
@@ -207,6 +255,194 @@ tipo_char t_caracter_t =
 		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
 		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 }};
 
+tipo_char t_caracter_o =
+		 {{0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 }};
+
+tipo_char t_caracter_r =
+		 {{15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0, 0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,15,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15}};
+
+tipo_char t_caracter_g =
+		 {{0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,0 ,0 ,0 ,0 ,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 }};
+
+tipo_char t_caracter_a =
+		 {{0 ,0 ,0 ,0 ,15,15,15,15,15,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,15,15,15,15,0 ,0 ,0 ,15,15,15,15,0 },
+		  {15,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15}};
+
+tipo_char t_caracter_m =
+		 {{15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,15},
+		  {15,15,15,15,15,0 ,0 ,0 ,15,15,15,15,15},
+		  {15,15,15,15,15,15,0 ,15,15,15,15,15,15},
+		  {15,15,15,0 ,15,15,15,15,15,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,15,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15}};
+
+tipo_char t_caracter_y =
+		 {{15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,15,15,15,15,15,15,15,15,15,15,15,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 }};
+
+tipo_char t_caracter_u =
+		 {{15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 },
+		  {0 ,0 ,15,15,15,15,15,15,15,15,15,0 ,0 }};
+
+tipo_char t_caracter_w =
+		 {{15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,15,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,15,15,15,15,15,0 ,15,15,15},
+		  {15,15,15,15,15,15,0 ,15,15,15,15,15,15},
+		  {15,15,15,15,15,0 ,0 ,0 ,15,15,15,15,15},
+		  {15,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15}};
+
+tipo_char t_caracter_i =
+		 {{15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15},
+		  {15,15,15,15,15,15,15,15,15,15,15,15,15}};
+
+tipo_char t_caracter_n =
+		 {{15,15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,15,15,15,0 ,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,15,15,15,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,15,15,15,0 ,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,15,15,15,0 ,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,15,15,15,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,15,15,15,0 ,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,15,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,15,15,15,15,15},
+		  {15,15,15,0 ,0 ,0 ,0 ,0 ,0 ,15,15,15,15}};
+
+tipo_char t_caracter_exclamacion =
+		 {{0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,15,15,15,15,15,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,15,15,15,15,15,15,15,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,15,15,15,15,15,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 },
+		  {0 ,0 ,0 ,0 ,0 ,15,15,15,0 ,0 ,0 ,0 ,0 }};
+
+
 typedef struct {
 	int x,y;
 	int mod_x, mod_y;
@@ -221,30 +457,16 @@ snk snake[LIMITE_SNAKE];
 
 frt fruta;
 
-BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
-
 frt espacios_vacios[LIMITE_SNAKE];
 
-void inicializar_espacios_vacios(void) {
-	int i;
-	for(i = 0 ; i < LIMITE_SNAKE ; i++) {
-		espacios_vacios[i].x = 0;
-		espacios_vacios[i].y = 0;
-	}
+BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
+
+bool direccion_vertical(int tecla, int tecla_anterior) {
+	return (tecla_anterior == KEY_UP || tecla_anterior == KEY_DOWN) && (tecla == KEY_RIGHT || tecla == KEY_LEFT);
 }
 
-int llenar_espacios(char campo[ALTO][ANCHO]) {
-	int i, j, tamanio = 0;
-	for(j = 1 ; j < ALTO - 1 ; j++) {
-		for(i = 1 ; i < ANCHO - 1 ; i++) {
-			if(campo[j][i] == ' ') {
-				espacios_vacios[tamanio].x = i;
-				espacios_vacios[tamanio].y = j;
-				tamanio++;
-			}
-		}
-	}
-	return tamanio;
+bool direccion_horizontal(int tecla, int tecla_anterior) {
+	return (tecla_anterior == KEY_RIGHT || tecla_anterior == KEY_LEFT) && (tecla == KEY_UP || tecla == KEY_DOWN);
 }
 
 void crear_cuerpo(void) {
@@ -262,7 +484,7 @@ void crear_caracter(char tecla_caracter) {
 	caracter = create_bitmap(ANCHO_CHAR, ALTO_CHAR);
 	clear_bitmap(caracter);
 	for(i = 0 ; i < ANCHO_CHAR ; i++) {
-		for (j = 0 ; j < ALTO_CHAR ; j++)
+		for (j = 0 ; j < ALTO_CHAR ; j++) {
 			switch(tecla_caracter) {
 				case 's': putpixel(caracter, i, j, palette_color[t_caracter_s[j][i]]);
 				break;
@@ -275,11 +497,35 @@ void crear_caracter(char tecla_caracter) {
 				case 't': putpixel(caracter, i, j, palette_color[t_caracter_t[j][i]]);
 				break;
 				case 'v': putpixel(caracter, i, j, palette_color[t_caracter_v[j][i]]);
+				break;
+				case 'o': putpixel(caracter, i, j, palette_color[t_caracter_o[j][i]]);
+				break;
+				case 'g': putpixel(caracter, i, j, palette_color[t_caracter_g[j][i]]);
+				break;
+				case 'a': putpixel(caracter, i, j, palette_color[t_caracter_a[j][i]]);
+				break;
+				case 'm': putpixel(caracter, i, j, palette_color[t_caracter_m[j][i]]);
+				break;
+				case 'r': putpixel(caracter, i, j, palette_color[t_caracter_r[j][i]]);
+				break;
+				case 'y': putpixel(caracter, i, j, palette_color[t_caracter_y[j][i]]);
+				break;
+				case 'u': putpixel(caracter, i, j, palette_color[t_caracter_u[j][i]]);
+				break;
+				case 'w': putpixel(caracter, i, j, palette_color[t_caracter_w[j][i]]);
+				break;
+				case 'i': putpixel(caracter, i, j, palette_color[t_caracter_i[j][i]]);
+				break;
+				case 'n': putpixel(caracter, i, j, palette_color[t_caracter_n[j][i]]);
+				break;
+				case '!': putpixel(caracter, i, j, palette_color[t_caracter_exclamacion[j][i]]);
+				break;
 			}
+		}
 	}
 }
 
-void crear_selector(void){
+void crear_selector(void) {
 	int i, j;
 	selector = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(selector);
@@ -289,13 +535,26 @@ void crear_selector(void){
 	}
 }
 
-void crear_comida(void) {
+void crear_comida(int numero_fruta_random) {
 	int i, j;
 	comida = create_bitmap(ESCALA, ESCALA);
 	clear_bitmap(comida);
+
 	for(i = 0 ; i < ESCALA ; i++) {
-		for (j = 0 ; j < ESCALA ; j++)
-			putpixel(comida, i, j, palette_color[fruta_bits[j][i]]);
+		for (j = 0 ; j < ESCALA ; j++) {
+			switch(numero_fruta_random) {
+				case 1: putpixel(comida, i, j, palette_color[fruta_uno[j][i]]);
+				break;
+				case 2: putpixel(comida, i, j, palette_color[fruta_dos[j][i]]);
+				break;
+				case 3: putpixel(comida, i, j, palette_color[fruta_tres[j][i]]);
+				break;
+				case 4: putpixel(comida, i, j, palette_color[fruta_cuatro[j][i]]);
+				break;
+				case 5: putpixel(comida, i, j, palette_color[fruta_cinco[j][i]]);
+				break;
+			}
+		}
 	}
 }
 
@@ -323,13 +582,6 @@ void dibujar_bordes(int pos_ancho, int pos_alto) {
 	rect(screen, ESCALA, ESCALA, ANCHO * ESCALA - pos_ancho, ALTO * ESCALA - pos_alto, palette_color[15]);
 }
 
-bool direccion_vertical(int tecla, int tecla_anterior) {
-	return (tecla_anterior == KEY_UP || tecla_anterior == KEY_DOWN) && (tecla == KEY_RIGHT || tecla == KEY_LEFT);
-}
-
-bool direccion_horizontal(int tecla, int tecla_anterior) {
-	return (tecla_anterior == KEY_RIGHT || tecla_anterior == KEY_LEFT) && (tecla == KEY_UP || tecla == KEY_DOWN);
-}
 
 void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior) {
 	int i,j;
@@ -354,60 +606,32 @@ void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int t
 	textprintf_centre_ex(screen, font, 610, 2, 15, 0, "%d", puntaje_record);
 }
 
-void intro_campo(char campo[ALTO][ANCHO]) {
-	int i, j;
-	for(i = 0; i < ALTO; i++) {
-		for(j = 0; j < ANCHO; j++) {
-			campo[i][j] = ' ';
-		}
-	}
-}
-
-void intro_datos(char campo[ALTO][ANCHO], int tam) {
-	int i;
-	for(i = 1 ; i < tam ; i++) {
-		snake[i].x = snake[i - 1].x - 1;
-		snake[i].y = snake[i - 1].y;
-		snake[i].imagen ='X';
-	}
-	snake[0].imagen = 'Y';
-
-	for(i = 0 ; i < tam ; i++) {
-		campo[snake[i].y][snake[i].x] = snake[i].imagen;
-	}
-	campo[fruta.y][fruta.x] = '%';
-}
-
 void dibujar_titulo_gusano(int color) {
-	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, " __________");
-	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, "/\\  ______ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
-	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 110, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
-	textprintf_justify_ex(screen, font, 30, 10, 120, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+	textprintf_justify_ex(screen, font, 30, 10, 20, 0, color, 0, " __________");
+	textprintf_justify_ex(screen, font, 30, 10, 30, 0, color, 0, "/\\  ______ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
+	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
+	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+}
+
+void dibujar_string(char * un_string, int *espacio) {
+	int i = 0;
+	for(i = 0 ; i < strlen(un_string) ; i++) {
+		crear_caracter(un_string[i]);
+		draw_character_ex(screen, caracter, *espacio, POS_SELECT_LEVEL, 15, 0);
+		*espacio += ANCHO_CHAR + 1;
+	}
+	*espacio += ANCHO_CHAR;
 }
 
 void dibujar_niveles(void) {
 	int espacio_char = 250;
-	int i = 0;
-	char * seleccion = "select";
-	char * nivel = "level";
-
-	for(i = 0 ; i < strlen(seleccion) ; i++) {
-		crear_caracter(seleccion[i]);
-		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
-		espacio_char += ANCHO_CHAR + 1;
-	}
-	espacio_char += ANCHO_CHAR;
-	for(i = 0 ; i < strlen(nivel) ; i++) {
-		crear_caracter(nivel[i]);
-		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
-		espacio_char += ANCHO_CHAR + 1;
-	}
-
+	dibujar_string("select", &espacio_char);
+	dibujar_string("level", &espacio_char);
 	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
 	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
 	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
@@ -479,6 +703,64 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	}
 }
 
+void game_over(void) {
+	int espacio_char = 260;
+	dibujar_string("game", &espacio_char);
+	dibujar_string("over", &espacio_char);
+}
+
+void you_win(void) {
+	int espacio_char = 260;
+	dibujar_string("you", &espacio_char);
+	dibujar_string("win!", &espacio_char);
+}
+
+void inicializar_espacios_vacios(void) {
+	int i;
+	for(i = 0 ; i < LIMITE_SNAKE ; i++) {
+		espacios_vacios[i].x = 0;
+		espacios_vacios[i].y = 0;
+	}
+}
+
+int llenar_espacios(char campo[ALTO][ANCHO]) {
+	int i, j, tamanio = 0;
+	for(j = 1 ; j < ALTO - 1 ; j++) {
+		for(i = 1 ; i < ANCHO - 1 ; i++) {
+			if(campo[j][i] == ' ') {
+				espacios_vacios[tamanio].x = i;
+				espacios_vacios[tamanio].y = j;
+				tamanio++;
+			}
+		}
+	}
+	return tamanio;
+}
+
+void intro_campo(char campo[ALTO][ANCHO]) {
+	int i, j;
+	for(i = 0; i < ALTO; i++) {
+		for(j = 0; j < ANCHO; j++) {
+			campo[i][j] = ' ';
+		}
+	}
+}
+
+void intro_datos(char campo[ALTO][ANCHO], int tam) {
+	int i;
+	for(i = 1 ; i < tam ; i++) {
+		snake[i].x = snake[i - 1].x - 1;
+		snake[i].y = snake[i - 1].y;
+		snake[i].imagen ='X';
+	}
+	snake[0].imagen = 'Y';
+
+	for(i = 0 ; i < tam ; i++) {
+		campo[snake[i].y][snake[i].x] = snake[i].imagen;
+	}
+	campo[fruta.y][fruta.x] = '%';
+}
+
 void leer_puntaje_record(int * nivel, FILE * archivo, int *puntaje_record) {
 	if(archivo != NULL) {
 		fscanf(archivo, "%d", puntaje_record);
@@ -512,14 +794,14 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 	leer_puntaje_record(nivel, archivo, puntaje_record);
 
 	crear_cuerpo();
-	crear_comida();
+	srand(time(NULL));
+	crear_comida(rand() % 5 + 1);
 	crear_cabeza(KEY_RIGHT);
 
 	snake[0].x = 32;
 	snake[0].y = 10;
 
 	*tam = TAMANIO_INICIAL;
-	srand(time(NULL));
 
 	fruta.x = rand() % (ANCHO - 2) + 1;
 	fruta.y = rand() % (ALTO - 2) + 1;
@@ -599,6 +881,8 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
 			play_sample(s_comer, 200, 150, 1000, 0);
 
+			crear_comida(rand() % 5 + 1);
+
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
 
@@ -612,10 +896,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 
 	if(*muerto == 0) {
 		if(keypressed()) {
-
-			if(es_tecla_de_direccion(*tecla)) {
-				*tecla_anterior = *tecla;
-			}
+			if(es_tecla_de_direccion(*tecla)) *tecla_anterior = *tecla;
 
 			*tecla = readkey() >> 8;
 
@@ -633,9 +914,9 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	}
 	else {
 		if(tam - TAMANIO_INICIAL == TOTAL_FRUTAS) {
-			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "YOU WIN!");
+			you_win();
 		} else {
-			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
+			game_over();
 			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
 			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", record);
 		}
