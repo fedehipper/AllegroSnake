@@ -16,6 +16,8 @@ void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y);
 void vaciar_flecha_selector(char campo[ALTO][ANCHO]);
 void atenuar_colores_titulo(int *color, int *retraso);
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel);
+void game_over(void);
+void you_win(void);
 
 
 #endif /* SRC_FUNCIONES_DRAW_H_ */

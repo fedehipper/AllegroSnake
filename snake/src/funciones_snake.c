@@ -212,10 +212,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 
 	if(*muerto == 0) {
 		if(keypressed()) {
-
-			if(es_tecla_de_direccion(*tecla)) {
-				*tecla_anterior = *tecla;
-			}
+			if(es_tecla_de_direccion(*tecla)) *tecla_anterior = *tecla;
 
 			*tecla = readkey() >> 8;
 
@@ -233,9 +230,9 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	}
 	else {
 		if(tam - TAMANIO_INICIAL == TOTAL_FRUTAS) {
-			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "YOU WIN!");
+			you_win();
 		} else {
-			textprintf_centre_ex(screen, font, 325, 190, 15, 0, "GAME OVER");
+			game_over();
 			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
 			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", record);
 		}

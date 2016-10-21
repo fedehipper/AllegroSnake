@@ -11,7 +11,7 @@
 #define ALTO 40
 #define ANCHO 64
 #define FLECHA_COORDENADA_X 23
-#define POS_SELECT_LEVEL 150
+#define POS_SELECT_LEVEL 140
 #define RETRASO_ATENUAR_TITULO 50
 
 BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
@@ -39,7 +39,7 @@ void crear_caracter(char tecla_caracter) {
 	caracter = create_bitmap(ANCHO_CHAR, ALTO_CHAR);
 	clear_bitmap(caracter);
 	for(i = 0 ; i < ANCHO_CHAR ; i++) {
-		for (j = 0 ; j < ALTO_CHAR ; j++)
+		for (j = 0 ; j < ALTO_CHAR ; j++) {
 			switch(tecla_caracter) {
 				case 's': putpixel(caracter, i, j, palette_color[t_caracter_s[j][i]]);
 				break;
@@ -52,7 +52,31 @@ void crear_caracter(char tecla_caracter) {
 				case 't': putpixel(caracter, i, j, palette_color[t_caracter_t[j][i]]);
 				break;
 				case 'v': putpixel(caracter, i, j, palette_color[t_caracter_v[j][i]]);
+				break;
+				case 'o': putpixel(caracter, i, j, palette_color[t_caracter_o[j][i]]);
+				break;
+				case 'g': putpixel(caracter, i, j, palette_color[t_caracter_g[j][i]]);
+				break;
+				case 'a': putpixel(caracter, i, j, palette_color[t_caracter_a[j][i]]);
+				break;
+				case 'm': putpixel(caracter, i, j, palette_color[t_caracter_m[j][i]]);
+				break;
+				case 'r': putpixel(caracter, i, j, palette_color[t_caracter_r[j][i]]);
+				break;
+				case 'y': putpixel(caracter, i, j, palette_color[t_caracter_y[j][i]]);
+				break;
+				case 'u': putpixel(caracter, i, j, palette_color[t_caracter_u[j][i]]);
+				break;
+				case 'w': putpixel(caracter, i, j, palette_color[t_caracter_w[j][i]]);
+				break;
+				case 'i': putpixel(caracter, i, j, palette_color[t_caracter_i[j][i]]);
+				break;
+				case 'n': putpixel(caracter, i, j, palette_color[t_caracter_n[j][i]]);
+				break;
+				case '!': putpixel(caracter, i, j, palette_color[t_caracter_exclamacion[j][i]]);
+				break;
 			}
+		}
 	}
 }
 
@@ -125,35 +149,31 @@ void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int t
 }
 
 void dibujar_titulo_gusano(int color) {
-	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, " __________");
-	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, "/\\  ______ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
-	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 110, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
-	textprintf_justify_ex(screen, font, 30, 10, 120, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+	textprintf_justify_ex(screen, font, 30, 10, 20, 0, color, 0, " __________");
+	textprintf_justify_ex(screen, font, 30, 10, 30, 0, color, 0, "/\\  ______ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
+	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
+	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
+	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+}
+
+void dibujar_string(char * un_string, int *espacio) {
+	int i = 0;
+	for(i = 0 ; i < strlen(un_string) ; i++) {
+		crear_caracter(un_string[i]);
+		draw_character_ex(screen, caracter, *espacio, POS_SELECT_LEVEL, 15, 0);
+		*espacio += ANCHO_CHAR + 1;
+	}
+	*espacio += ANCHO_CHAR;
 }
 
 void dibujar_niveles(void) {
 	int espacio_char = 250;
-	int i = 0;
-	char * seleccion = "select";
-	char * nivel = "level";
-
-	for(i = 0 ; i < strlen(seleccion) ; i++) {
-		crear_caracter(seleccion[i]);
-		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
-		espacio_char += ANCHO_CHAR + 1;
-	}
-	espacio_char += ANCHO_CHAR;
-	for(i = 0 ; i < strlen(nivel) ; i++) {
-		crear_caracter(nivel[i]);
-		draw_character_ex(screen, caracter, espacio_char, POS_SELECT_LEVEL, 15, 0);
-		espacio_char += ANCHO_CHAR + 1;
-	}
-
+	dibujar_string("select", &espacio_char);
+	dibujar_string("level", &espacio_char);
 	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
 	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
 	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
@@ -225,3 +245,14 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 	}
 }
 
+void game_over(void) {
+	int espacio_char = 260;
+	dibujar_string("game", &espacio_char);
+	dibujar_string("over", &espacio_char);
+}
+
+void you_win(void) {
+	int espacio_char = 260;
+	dibujar_string("you", &espacio_char);
+	dibujar_string("win!", &espacio_char);
+}
