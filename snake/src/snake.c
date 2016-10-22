@@ -20,6 +20,7 @@
 #define TOTAL_FRUTAS 2556
 #define MAX_DIGITOS_PUNTAJE 4
 #define FLECHA_COORDENADA_X 23
+#define CANTIDAD_FRUTAS 6
 
 
 
@@ -102,6 +103,17 @@ tipo_snake fruta_cinco =
 	{0 ,0 ,15,15,15,15,15,0 ,0 },
 	{0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
     {0 ,0 ,0 ,0 ,15,0 ,0 ,0 ,0 }};
+
+tipo_snake fruta_seis =
+   {{15,15,15,0 ,0 ,0 ,15,15,15},
+	{15,15,15,0 ,0 ,0 ,15,15,15},
+	{15,15,15,0 ,0 ,0 ,15,15,15},
+	{0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+    {0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+    {0 ,0 ,0 ,15,15,15,0 ,0 ,0 },
+    {15,15,15,0 ,0 ,0 ,15,15,15},
+	{15,15,15,0 ,0 ,0 ,15,15,15},
+    {15,15,15,0 ,0 ,0 ,15,15,15}};
 
 tipo_snake cabeza_a_derecha =
    {{15,15,15,15,15,15,15,15,15},
@@ -553,6 +565,8 @@ void crear_comida(int numero_fruta_random) {
 				break;
 				case 5: putpixel(comida, i, j, palette_color[fruta_cinco[j][i]]);
 				break;
+				case 6: putpixel(comida, i, j, palette_color[fruta_seis[j][i]]);
+				break;
 			}
 		}
 	}
@@ -795,7 +809,7 @@ void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record,
 
 	crear_cuerpo();
 	srand(time(NULL));
-	crear_comida(rand() % 5 + 1);
+	crear_comida(rand() % CANTIDAD_FRUTAS + 1);
 	crear_cabeza(KEY_RIGHT);
 
 	snake[0].x = 32;
@@ -881,7 +895,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 		if(snake[0].x == fruta.x && snake[0].y == fruta.y) {
 			play_sample(s_comer, 200, 150, 1000, 0);
 
-			crear_comida(rand() % 5 + 1);
+			crear_comida(rand() % CANTIDAD_FRUTAS + 1);
 
 			tam += 1;
 			snake[tam - 1].imagen = 'X';
@@ -925,17 +939,21 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	return tam;
 }
 
+void asignar_pausa(int *pausa, int nivel) {
+	switch(nivel) {
+		case 1 : *pausa = 300;
+		break;
+		case 2 : *pausa = 150;
+		break;
+		case 3 : *pausa = 50;
+		break;
+	}
+}
+
 void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
-	switch(*nivel) {
-		case 1 : pausa = 300;
-		break;
-		case 2 : pausa = 150;
-		break;
-		case 3 : pausa = 50;
-		break;
-	}
+	asignar_pausa(&pausa, *nivel);
 
 	SAMPLE * sonido_comer = load_sample("comer.wav");
 	SAMPLE * sonido_pausa = load_sample("pause.wav");
