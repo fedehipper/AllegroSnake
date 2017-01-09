@@ -136,73 +136,72 @@ void crear_cabeza(int tecla_dir) {
 	}
 }
 
-void dibujar_bordes(int pos_ancho, int pos_alto) {
-	rect(screen, ESCALA, ESCALA, ANCHO * ESCALA - pos_ancho, ALTO * ESCALA - pos_alto, palette_color[15]);
+void dibujar_bordes(int pos_ancho, int pos_alto, BITMAP *pantalla) {
+	rect(pantalla, ESCALA, ESCALA, ANCHO * ESCALA - pos_ancho, ALTO * ESCALA - pos_alto, palette_color[15]);
 }
 
 
-void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior) {
+void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior, BITMAP *pantalla) {
 	int i,j;
-	clear_bitmap(screen);
-	dibujar_bordes(10, 10);
+	clear_bitmap(pantalla);
+	dibujar_bordes(10, 10, pantalla);
 	for(i = 0 ; i < ALTO ; i++) {
 		for(j = 0 ; j < ANCHO ; j++) {
 			if(campo[i][j] == 'X')
-				draw_sprite(screen, jugador, j * ESCALA, i * ESCALA);
+				draw_sprite(pantalla, jugador, j * ESCALA, i * ESCALA);
 			if(campo[i][j] == 'Y') {
 				if(direccion_vertical(tecla, *tecla_anterior) || direccion_horizontal(tecla, *tecla_anterior)) {
 					crear_cabeza(tecla);
 				}
-				draw_sprite(screen, cabeza, j * ESCALA, i * ESCALA);
+				draw_sprite(pantalla, cabeza, j * ESCALA, i * ESCALA);
 			}
 			if(campo[i][j] == '%') {
-				draw_sprite(screen, comida, j * ESCALA, i * ESCALA);
+				draw_sprite(pantalla, comida, j * ESCALA, i * ESCALA);
 			}
 		}
 	}
-	textprintf_centre_ex(screen, font, 30, 2, 15, 0, "%d", puntaje_actual);
-	textprintf_centre_ex(screen, font, 610, 2, 15, 0, "%d", puntaje_record);
+	textprintf_centre_ex(pantalla, font, 30, 2, 15, 0, "%d", puntaje_actual);
+	textprintf_centre_ex(pantalla, font, 610, 2, 15, 0, "%d", puntaje_record);
 }
 
-void dibujar_titulo_gusano(int color) {
-	textprintf_justify_ex(screen, font, 30, 10, 20, 0, color, 0, " __________");
-	textprintf_justify_ex(screen, font, 30, 10, 30, 0, color, 0, "/\\  ______ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 40, 0, color, 0, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
-	textprintf_justify_ex(screen, font, 30, 10, 50, 0, color, 0, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 60, 0, color, 0, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 70, 0, color, 0, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 80, 0, color, 0, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
-	textprintf_justify_ex(screen, font, 30, 10, 90, 0, color, 0, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
-	textprintf_justify_ex(screen, font, 30, 10, 100, 0, color, 0, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
+void dibujar_titulo_gusano(int color, BITMAP * pantalla) {
+	textprintf_justify_ex(pantalla, font, 30, 10, 20, 16, color, 16, " __________");
+	textprintf_justify_ex(pantalla, font, 30, 10, 30, 16, color, 16, "/\\  ______ \\");
+	textprintf_justify_ex(pantalla, font, 30, 10, 40, 16, color, 16, "\\ \\ \\____/\\_\\   __    __   ________   ________   ________   ________");
+	textprintf_justify_ex(pantalla, font, 30, 10, 50, 16, color, 16, " \\ \\ \\  _\\/_/_ /\\ \\  /\\ \\ /\\  _____\\ /\\_____  \\ /\\  ____ \\ /\\  ____ \\");
+	textprintf_justify_ex(pantalla, font, 30, 10, 60, 16, color, 16, "  \\ \\ \\/\\____ \\\\ \\ \\ \\ \\ \\\\ \\ \\____/_\\/_____\\  \\\\ \\ \\__/\\ \\\\ \\ \\_ /\\ \\");
+	textprintf_justify_ex(pantalla, font, 30, 10, 70, 16, color, 16, "   \\ \\ \\/____\\ \\\\ \\ \\ \\ \\ \\\\ \\______ \\ /\\  ____ \\\\ \\ \\ \\ \\ \\\\ \\ \\ \\ \\ \\");
+	textprintf_justify_ex(pantalla, font, 30, 10, 80, 16, color, 16, "    \\ \\ \\_____\\ \\\\ \\ \\_\\_\\ \\\\/______\\ \\\\ \\ \\__/\\ \\\\ \\ \\ \\ \\ \\\\ \\ \\_\\_\\ \\");
+	textprintf_justify_ex(pantalla, font, 30, 10, 90, 16, color, 16, "     \\ \\_________\\\\ \\_______\\ /\\_______\\\\ \\_______\\\\ \\ \\ \\ \\ \\\\ \\_______\\");
+	textprintf_justify_ex(pantalla, font, 30, 10, 100, 16, color, 16, "      \\/_________/ \\/_______/ \\/_______/ \\/_______/ \\/_/  \\/_/ \\________/");
 }
 
-void dibujar_string(char * un_string, int *espacio) {
+void dibujar_string(char * un_string, int *espacio, BITMAP * pantalla) {
 	int i = 0;
 	for(i = 0 ; i < strlen(un_string) ; i++) {
 		crear_caracter(un_string[i]);
-		draw_character_ex(screen, caracter, *espacio, POS_SELECT_LEVEL, 15, 0);
+		draw_character_ex(pantalla, caracter, *espacio, POS_SELECT_LEVEL, 15, 0);
 		*espacio += ANCHO_CHAR + 1;
 	}
 	*espacio += ANCHO_CHAR;
 }
 
-void dibujar_niveles(void) {
+void dibujar_niveles(BITMAP *pantalla) {
 	int espacio_char = 250;
-	dibujar_string("select", &espacio_char);
-	dibujar_string("level", &espacio_char);
-	textprintf_justify_ex(screen, font, 260, 10, 180, 0, 15, 0, "EASY");
-	textprintf_justify_ex(screen, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
-	textprintf_justify_ex(screen, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
+	dibujar_string("select", &espacio_char, pantalla);
+	dibujar_string("level", &espacio_char, pantalla);
+	textprintf_justify_ex(pantalla, font, 260, 10, 180, 0, 15, 0, "EASY");
+	textprintf_justify_ex(pantalla, font, 260, 10, 200, 0, 15, 0, "MEDIUM");
+	textprintf_justify_ex(pantalla, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
 }
 
-
-void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y) {
+void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y, BITMAP *pantalla) {
 	int i;
-	clear_bitmap(screen);
-	dibujar_bordes(10, 10);
+	clear_bitmap(pantalla);
+	dibujar_bordes(10, 10, pantalla);
 	for(i = 18 ; i < FLECHA_COORDENADA_X ; i++) {
 		if(campo[23][y] == 'F') {
-			draw_sprite(screen, selector, FLECHA_COORDENADA_X * ESCALA, y * ESCALA);
+			draw_sprite(pantalla, selector, FLECHA_COORDENADA_X * ESCALA, y * ESCALA);
 		}
 	}
 }
@@ -221,17 +220,21 @@ void atenuar_colores_titulo(int *color, int *retraso) {
 	if(*retraso > 20) *retraso = 0;
 }
 
-void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
+void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel, BITMAP *pantalla) {
 	SAMPLE * sonido_flecha;
 	sonido_flecha = load_sample("s_flecha.wav");
 	crear_selector();
+	clear_bitmap(pantalla);
+
+
 	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 15, retraso = 0;
-	draw_sprite(screen, selector, 23 * ESCALA, 18 * ESCALA);
+	draw_sprite(pantalla, selector, 23 * ESCALA, 18 * ESCALA);
 
 	while(true) {
-		dibujar_bordes(ESCALA, ESCALA);
-		dibujar_niveles();
-		dibujar_titulo_gusano(color);
+		blit(pantalla, screen, 0,0,0,0, ANCHO * 10, ALTO * 10);
+		dibujar_bordes(ESCALA, ESCALA, pantalla);
+		dibujar_niveles(pantalla);
+		dibujar_titulo_gusano(color, pantalla);
 		atenuar_colores_titulo(&color, &retraso);
 
 		if(keypressed()) {
@@ -248,27 +251,24 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel) {
 
 			vaciar_flecha_selector(campo);
 			switch(pos_nivel) {
-				case 1: flecha_y = 18;
-				break;
-				case 2: flecha_y = 20;
-				break;
-				case 3: flecha_y = 22;
-				break;
+				case 1: flecha_y = 18; break;
+				case 2: flecha_y = 20; break;
+				case 3: flecha_y = 22; break;
 			}
 			campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
-			dibujar_flecha_selector(campo, flecha_y);
+			dibujar_flecha_selector(campo, flecha_y, pantalla);
 		}
 	}
 }
 
-void game_over(void) {
+void game_over(BITMAP *pantalla) {
 	int espacio_char = 260;
-	dibujar_string("game", &espacio_char);
-	dibujar_string("over", &espacio_char);
+	dibujar_string("game", &espacio_char, pantalla);
+	dibujar_string("over", &espacio_char, pantalla);
 }
 
-void you_win(void) {
+void you_win(BITMAP *pantalla) {
 	int espacio_char = 260;
-	dibujar_string("you", &espacio_char);
-	dibujar_string("win!", &espacio_char);
+	dibujar_string("you", &espacio_char, pantalla);
+	dibujar_string("win!", &espacio_char, pantalla);
 }

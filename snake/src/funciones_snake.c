@@ -98,18 +98,18 @@ void instalar_sonidos(void) {
 	set_volume(200, 100);
 }
 
-void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo) {
-	allegro_init();
+void inicio(int *tam, char campo[ALTO][ANCHO], int *nivel, int * puntaje_record, FILE * archivo, BITMAP *pantalla) {
 	install_keyboard();
 	install_mouse();
 	install_timer();
 
 	set_gfx_mode(GFX_SAFE, ANCHO * 10, ALTO * 10, 0, 0);
-	show_mouse(screen);
+	show_os_cursor(2);
 
 	instalar_sonidos();
 
-	seleccionar_nivel(campo, nivel);
+	seleccionar_nivel(campo, nivel, pantalla);
+
 	leer_puntaje_record(nivel, archivo, puntaje_record);
 
 	crear_cuerpo();
@@ -159,9 +159,10 @@ void asignar_movimiento(int mov_x, int mov_y) {
 	snake[0].mod_y = mov_y;
 }
 
-void exit_snake(void) {
+void exit_snake(BITMAP *pantalla) {
 	int tecla = 0;
-	textprintf_centre_ex(screen, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
+	textprintf_centre_ex(pantalla, font, 325, 250, 15, 0, "Press the [Enter] key to exit ...");
+	blit(pantalla, screen, 0,0,0,0, ANCHO * 10, ALTO * 10);
 	while(true) {
 		tecla = readkey() >> 8;
 		if(tecla == KEY_ENTER) break;
@@ -183,7 +184,7 @@ bool es_tecla_de_direccion(int tecla) {
 	return tecla == KEY_UP || tecla == KEY_DOWN || tecla == KEY_RIGHT || tecla == KEY_LEFT;
 }
 
-int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior) {
+int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record, SAMPLE *s_comer, SAMPLE *s_pausa, SAMPLE *s_impacto, int *tecla_anterior, BITMAP *pantalla) {
 	if(*muerto == 0) {
 		if(snake[0].x == 0 || snake[0].x == ANCHO - 1 || snake[0].y == 0 || snake[0].y == ALTO - 1) *muerto = 1;
 	}
@@ -233,13 +234,14 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 	}
 	else {
 		if(tam - TAMANIO_INICIAL == TOTAL_FRUTAS) {
-			you_win();
+			you_win(pantalla);
 		} else {
-			game_over();
-			textprintf_centre_ex(screen, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
-			textprintf_centre_ex(screen, font, 325, 220, 15, 0, "RECORD: %d", record);
+			game_over(pantalla);
+			textprintf_centre_ex(pantalla, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
+			textprintf_centre_ex(pantalla, font, 325, 220, 15, 0, "RECORD: %d", record);
 		}
-		exit_snake();
+		blit(pantalla, screen, 0,0,0,0, ANCHO * 10, ALTO * 10);
+		exit_snake(pantalla);
 	}
 	return tam;
 }
@@ -256,7 +258,7 @@ void asignar_pausa(int *pausa, int nivel) {
 }
 
 
-void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel) {
+void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel, BITMAP *pantalla) {
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;
 
 	asignar_pausa(&pausa, *nivel);
@@ -266,8 +268,9 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 	SAMPLE * sonido_impacto = load_sample("impact.wav");
 
 	do {
-		draw(campo, puntaje_record, tam - TAMANIO_INICIAL, tecla, &tecla_anterior);
-		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior);
+		draw(campo, puntaje_record, tam - TAMANIO_INICIAL, tecla, &tecla_anterior, pantalla);
+		blit(pantalla, screen, 0,0,0,0, ANCHO * 10, ALTO * 10);
+		tam = input(campo, tam, &tecla, &muerto, puntaje_record, sonido_comer, sonido_pausa, sonido_impacto, &tecla_anterior, pantalla);
 		update(campo, tam, muerto);
 		rest(pausa);
 	} while (muerto == 0);
@@ -276,6 +279,5 @@ void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, 
 
 	archivo = fopen("puntaje_record.txt", "w");
 	(puntaje_record <= puntaje_actual) ? fprintf(archivo, "%d", puntaje_actual) : fprintf(archivo, "%d", puntaje_record);
-
 	fclose(archivo);
 }
