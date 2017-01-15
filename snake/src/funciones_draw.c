@@ -81,16 +81,6 @@ void crear_caracter(char tecla_caracter) {
 	}
 }
 
-void crear_selector(void) {
-	int i, j;
-	selector = create_bitmap(ESCALA, ESCALA);
-	clear_bitmap(selector);
-	for(i = 0 ; i < ESCALA ; i++) {
-		for(j = 0 ; j < ESCALA ; j++)
-			putpixel(selector, i, j, palette_color[flecha_seleccion[j][i]]);
-	}
-}
-
 void crear_comida(int numero_fruta_random) {
 	int i, j;
 	comida = create_bitmap(ESCALA, ESCALA);
@@ -139,7 +129,6 @@ void crear_cabeza(int tecla_dir) {
 void dibujar_bordes(int pos_ancho, int pos_alto, BITMAP *pantalla) {
 	rect(pantalla, ESCALA, ESCALA, ANCHO * ESCALA - pos_ancho, ALTO * ESCALA - pos_alto, palette_color[15]);
 }
-
 
 void draw(char campo[ALTO][ANCHO], int puntaje_record, int puntaje_actual, int tecla, int *tecla_anterior, BITMAP *pantalla) {
 	int i,j;
@@ -195,22 +184,6 @@ void dibujar_niveles(BITMAP *pantalla) {
 	textprintf_justify_ex(pantalla, font, 260, 10, 220, 0, 15, 0, "PROFFESIONAL");
 }
 
-void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y, BITMAP *pantalla) {
-	int i;
-	dibujar_bordes(10, 10, pantalla);
-	for(i = 18 ; i < FLECHA_COORDENADA_X ; i++) {
-		if(campo[23][y] == 'F') {
-			draw_sprite(pantalla, selector, FLECHA_COORDENADA_X * ESCALA, y * ESCALA);
-		}
-	}
-}
-
-void vaciar_flecha_selector(char campo[ALTO][ANCHO]) {
-	campo[FLECHA_COORDENADA_X][18] = ' ';
-	campo[FLECHA_COORDENADA_X][20] = ' ';
-	campo[FLECHA_COORDENADA_X][22] = ' ';
-}
-
 void atenuar_colores_titulo(int *color, int *retraso) {
 	(*retraso)++;
 	rest(RETRASO_ATENUAR_TITULO);
@@ -222,11 +195,9 @@ void atenuar_colores_titulo(int *color, int *retraso) {
 void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel, BITMAP *pantalla) {
 	SAMPLE * sonido_flecha;
 	sonido_flecha = load_sample("s_flecha.wav");
-	crear_selector();
 
-	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 15, retraso = 0;
-	draw_sprite(pantalla, selector, 23 * ESCALA, 18 * ESCALA);
-
+	int tecla = 0, pos_nivel = 1, color = 15, retraso = 0;
+	triangle(pantalla, 230, 178, 235, 183, 230, 188, 15);
 	while(true) {
 		blit(pantalla, screen, 0,0,0,0, ANCHO * 10, ALTO * 10);
 		dibujar_bordes(ESCALA, ESCALA, pantalla);
@@ -246,29 +217,26 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel, BITMAP *pantalla) {
 			if(pos_nivel > 3) pos_nivel = 1;
 			if(pos_nivel < 1) pos_nivel = 3;
 
-			vaciar_flecha_selector(campo);
 			switch(pos_nivel) {
 				case 1: {
+					triangle(pantalla, 230, 178, 235, 183, 230, 188, 15);
 					rectfill(pantalla, 230, 218, 240, 228, 16);
 					rectfill(pantalla, 230, 198, 240, 208, 16);
-					flecha_y = 18;
 				}
 				break;
 				case 2: {
+					triangle(pantalla, 230, 198, 235, 203, 230, 208, 15);
 					rectfill(pantalla, 230, 218, 240, 228, 16);
 					rectfill(pantalla, 230, 178, 240, 188, 16);
-					flecha_y = 20;
 				}
 				break;
 				case 3: {
+					triangle(pantalla, 230, 218, 235, 223, 230, 228, 15);
 					rectfill(pantalla, 230, 198, 240, 208, 16);
 					rectfill(pantalla, 230, 178, 240, 188, 16);
-					flecha_y = 22;
 				}
 				break;
 			}
-			campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
-			dibujar_flecha_selector(campo, flecha_y, pantalla);
 		}
 	}
 }
