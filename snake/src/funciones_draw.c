@@ -15,7 +15,7 @@
 #define POS_SELECT_LEVEL 140
 #define RETRASO_ATENUAR_TITULO 50
 
-BITMAP *comida, *jugador, *cabeza, *selector, *caracter;
+BITMAP *comida, *jugador, *cabeza, *caracter;
 
 bool direccion_vertical(int tecla, int tecla_anterior) {
 	return (tecla_anterior == KEY_UP || tecla_anterior == KEY_DOWN) && (tecla == KEY_RIGHT || tecla == KEY_LEFT);
