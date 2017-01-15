@@ -228,8 +228,7 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 			if(*tecla == KEY_UP && snake[0].mod_y != 1) mov_y = -1;
 			if(*tecla == KEY_LEFT && snake[0].mod_x != 1) mov_x = -1;
 			if(*tecla == KEY_RIGHT && snake[0].mod_x != -1) mov_x = 1;
-			if(mov_x != 0 || mov_y != 0)
-				asignar_movimiento(mov_x, mov_y);
+			if(mov_x != 0 || mov_y != 0) asignar_movimiento(mov_x, mov_y);
 		}
 	}
 	else {
@@ -240,7 +239,6 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 			textprintf_centre_ex(pantalla, font, 325, 210, 15, 0, "SCORE: %d", tam - TAMANIO_INICIAL);
 			textprintf_centre_ex(pantalla, font, 325, 220, 15, 0, "RECORD: %d", record);
 		}
-		blit(pantalla, screen, 0,0,0,0, ANCHO * 10, ALTO * 10);
 		exit_snake(pantalla);
 	}
 	return tam;
@@ -248,15 +246,11 @@ int input(char campo[ALTO][ANCHO], int tam, int *tecla, int *muerto, int record,
 
 void asignar_pausa(int *pausa, int nivel) {
 	switch(nivel) {
-		case 1 : *pausa = 300;
-		break;
-		case 2 : *pausa = 150;
-		break;
-		case 3 : *pausa = 50;
-		break;
+		case 1 : *pausa = 300; break;
+		case 2 : *pausa = 150; break;
+		case 3 : *pausa = 50; break;
 	}
 }
-
 
 void loop(char campo[ALTO][ANCHO], int tam, int puntaje_record, FILE * archivo, int *nivel, BITMAP *pantalla) {
 	int muerto = 0, pausa = 0, tecla = KEY_RIGHT, tecla_anterior = KEY_RIGHT;

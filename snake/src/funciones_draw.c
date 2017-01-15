@@ -197,7 +197,6 @@ void dibujar_niveles(BITMAP *pantalla) {
 
 void dibujar_flecha_selector(char campo[ALTO][ANCHO], int y, BITMAP *pantalla) {
 	int i;
-	clear_bitmap(pantalla);
 	dibujar_bordes(10, 10, pantalla);
 	for(i = 18 ; i < FLECHA_COORDENADA_X ; i++) {
 		if(campo[23][y] == 'F') {
@@ -224,8 +223,6 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel, BITMAP *pantalla) {
 	SAMPLE * sonido_flecha;
 	sonido_flecha = load_sample("s_flecha.wav");
 	crear_selector();
-	clear_bitmap(pantalla);
-
 
 	int tecla = 0, pos_nivel = 1, flecha_y = 18, color = 15, retraso = 0;
 	draw_sprite(pantalla, selector, 23 * ESCALA, 18 * ESCALA);
@@ -251,9 +248,24 @@ void seleccionar_nivel(char campo[ALTO][ANCHO], int *nivel, BITMAP *pantalla) {
 
 			vaciar_flecha_selector(campo);
 			switch(pos_nivel) {
-				case 1: flecha_y = 18; break;
-				case 2: flecha_y = 20; break;
-				case 3: flecha_y = 22; break;
+				case 1: {
+					rectfill(pantalla, 230, 218, 240, 228, 16);
+					rectfill(pantalla, 230, 198, 240, 208, 16);
+					flecha_y = 18;
+				}
+				break;
+				case 2: {
+					rectfill(pantalla, 230, 218, 240, 228, 16);
+					rectfill(pantalla, 230, 178, 240, 188, 16);
+					flecha_y = 20;
+				}
+				break;
+				case 3: {
+					rectfill(pantalla, 230, 198, 240, 208, 16);
+					rectfill(pantalla, 230, 178, 240, 188, 16);
+					flecha_y = 22;
+				}
+				break;
 			}
 			campo[FLECHA_COORDENADA_X][flecha_y] = 'F';
 			dibujar_flecha_selector(campo, flecha_y, pantalla);
